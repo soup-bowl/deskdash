@@ -1,4 +1,5 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from communicator.stats import Stats
 import json
 import time
 
@@ -7,10 +8,10 @@ port     = 43594
 
 class Server(BaseHTTPRequestHandler):
 	def do_GET(self):
-		self.set_headers(401, {'Content-type': 'application/json'})
+		self.set_headers(200, {'Content-type': 'application/json'})
 		response = {
-			'success': False,
-			'message': 'Unauthenticated and unexpected connection.'
+			'success': True,
+			'content': Stats().get()
 		}
 		self.wfile.write(bytes(json.dumps(response), "utf-8"))
 	
