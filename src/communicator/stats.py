@@ -10,7 +10,8 @@ class Stats(object):
 			'gpu': self.get_gpu_stats(),
 			'cpu': self.get_cpu_stats(),
 			'ram': self.get_ram_stats(),
-			'storage': self.get_storage_stats()
+			'storage': self.get_storage_stats(),
+			'battery': self.get_battery_stats()
 		}
 
 	def get_gpu_stats(self):
@@ -67,5 +68,14 @@ class Stats(object):
 			'available': True,
 			'disks': disks
 		}
-		
-		
+
+	def get_battery_stats(self):
+		try:
+			battery = psutil.sensors_battery()
+			return {
+				'available': True,
+				'charge': battery.percent,
+				'ac_plug': battery.power_plugged
+			}
+		except AttributeError:
+			return {'available': False}
