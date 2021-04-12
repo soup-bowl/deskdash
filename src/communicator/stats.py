@@ -7,8 +7,8 @@ import psutil
 class Stats(object):
 	def get(self):
 		return {
-			'gpu': self.get_gpu_stats(),
 			'cpu': self.get_cpu_stats(),
+			'gpu': self.get_gpu_stats(),
 			'ram': self.get_ram_stats(),
 			'storage': self.get_storage_stats(),
 			'battery': self.get_battery_stats()
