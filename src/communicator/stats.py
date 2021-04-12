@@ -35,7 +35,7 @@ class Stats(object):
 
 		return {
 			'available': True,
-			'cpu_usage': str(cpu_usage) + ' %'
+			'cpu_usage': cpu_usage
 		}
 	
 	def get_ram_stats(self):
@@ -44,8 +44,8 @@ class Stats(object):
 
 		return {
 			'available': True,
-			'real_memory_usage': str(ram_usage) + ' %',
-			'swap_memory_usage': str(page_usage) + ' %'
+			'real_memory_usage': ram_usage,
+			'swap_memory_usage': page_usage
 		}
 		
 		
