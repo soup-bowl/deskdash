@@ -25,3 +25,9 @@ class StatChecks(unittest.TestCase):
 		self.assertTrue(ram['available'])
 		self.assertGreaterEqual(ram['real_memory_usage'], 0)
 		self.assertLessEqual(ram['real_memory_usage'], 100)
+	
+	def test_get_storage_stats(self):
+		storage = self.stats.get()['storage']
+
+		self.assertTrue(storage['available'])
+		self.assertGreater(len(storage['disks']), 0)

@@ -9,7 +9,8 @@ class Stats(object):
 		return {
 			'gpu': self.get_gpu_stats(),
 			'cpu': self.get_cpu_stats(),
-			'ram': self.get_ram_stats()
+			'ram': self.get_ram_stats(),
+			'storage': self.get_storage_stats()
 		}
 
 	def get_gpu_stats(self):
@@ -46,6 +47,25 @@ class Stats(object):
 			'available': True,
 			'real_memory_usage': ram_usage,
 			'swap_memory_usage': page_usage
+		}
+
+	def get_storage_stats(self):
+		disks = []
+		for x in range(1):
+			partition_info  = psutil.disk_usage('/')
+			partition_usage = partition_info.percent
+			partition_used  = round( partition_info.used / 1000000000, 2 )
+			partition_total = round( partition_info.total / 1000000000, 2 )
+
+			disks.append({
+				'disk_used': partition_used,
+				'disk_total': partition_total,
+				'disk_usage': partition_usage,
+			}) 
+		
+		return {
+			'available': True,
+			'disks': disks
 		}
 		
 		
