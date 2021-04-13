@@ -11,7 +11,8 @@ class Stats(object):
 			'gpu': self.get_gpu_stats(),
 			'ram': self.get_ram_stats(),
 			'storage': self.get_storage_stats(),
-			'battery': self.get_battery_stats()
+			'battery': self.get_battery_stats(),
+			'temps': self.get_temperatures()
 		}
 
 	def get_gpu_stats(self):
@@ -79,3 +80,20 @@ class Stats(object):
 			}
 		except AttributeError:
 			return {'available': False}
+
+	def get_temperatures(self):
+		try:
+			temps = psutil.sensors_temperatures()
+		except AttributeError:
+			return {'available': False}
+		
+		collection = {'available': True, 'measurements': []}
+		for name, measurements in temps.items():
+			if name == 'k10temp':
+				collection['measurements'].append({
+					'name': 'AMD Processor',
+					'current': measurements[0].current,
+					'limit': measurements[0].critical
+				})
+
+		return collection
