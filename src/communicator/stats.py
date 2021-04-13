@@ -23,8 +23,8 @@ class Stats(object):
 		gpu      = xml.etree.ElementTree.fromstring(response).find("gpu")
 
 		gpu_temp     = gpu.find("temperature")
-		gpu_temp_now = gpu_temp.find("gpu_temp").text 
-		gpu_temp_max = gpu_temp.find("gpu_temp_max_threshold").text
+		gpu_temp_now = int(gpu_temp.find("gpu_temp").text.rpartition('C')[0])
+		gpu_temp_max = int(gpu_temp.find("gpu_temp_max_threshold").text.rpartition('C')[0])
 
 		return {
 			'available': True,
