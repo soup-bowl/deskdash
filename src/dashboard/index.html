@@ -8,36 +8,11 @@
 		<link href="dash.css" rel="stylesheet">
 	</head>
 	<body>
-		<div id="stage">
-			<div id="70" style="display:none">
-				<div class="px-4 py-5 my-5 text-center">
-					<h1 id="70machine" class="display-5 fw-bold">Machine</h1>
-					<p id="70spec">Computer specifications.</p>
-					<div class="container">
-						<div class="a70chart"></div>
-						<ul class="list-group text-left">
-							<li class="list-group-item list-processor">
-								Processor
-								<span id="70processorUsage" class="badge badge-secondary badge-pill">0</span>
-							</li>
-							<li class="list-group-item list-memory">
-								Memory
-								<span id="70memoryUsage" class="badge badge-secondary badge-pill">0</span>
-							</li>
-							<li id="70graphicSegment" class="list-group-item list-graphics" style="display:none">
-								Graphics
-								<span id="70graphicUsage" class="badge badge-secondary badge-pill">0</span>
-								<span id="70graphicTemp" class="badge badge-success badge-pill">0</span>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
+		<div id="stage"></div>
 
 		<script src="node_modules/jquery/dist/jquery.js"></script>
 		<script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
-		<script src ="node_modules/chartist/dist/chartist.js"></script>
+		<script src="node_modules/chartist/dist/chartist.js"></script>
 		<script src="dash.js"></script>
 	</body>
 </html>

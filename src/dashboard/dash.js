@@ -7,31 +7,40 @@ function init() {
 		fetch(obj.endpoint)
 			.then(response => response.json())
 			.then(json => {
-				var segment = document.getElementById(obj.id);
-				//data[key]['series'] = [ [], [] ];
-				
-				syst = json['content']['system'];
-				document.getElementById(obj.id + 'machine').innerHTML = syst['hostname'];
-				document.getElementById(obj.id + 'spec').innerHTML = syst['operating_system'] + ' ■ ' + syst['release'] + ' ■ ' + syst['processor'];
+				file_get_contents("segments/communicator.html").then(page => {
+					rechanged = page.replaceAll('{{CHANGE}}', key);
+					document.getElementById("stage").innerHTML = rechanged;
 
-				if (json['content']['gpu']['available']) {
-					var gpumon = document.getElementById(obj.id + 'graphicSegment');
-					gpumon.style.display = null;
-				}
-
-				new Chartist.Line('.a'+ obj.id + 'chart', {
-					labels: [],
-					series: [ [], [], [] ],
-				}, {
-					fullWidth: true,
-					chartPadding: { right: 40 },
-					height: 200
+					load_new(obj, json);
 				});
-
-				segment.style.display = null;
 			})
 			.catch(err => console.log(err));
 	}
+}
+
+function load_new(obj, json) {
+	var segment = document.getElementById(obj.id);
+	//data[key]['series'] = [ [], [] ];
+	
+	syst = json['content']['system'];
+	document.getElementById(obj.id + 'machine').innerHTML = syst['hostname'];
+	document.getElementById(obj.id + 'spec').innerHTML = syst['operating_system'] + ' ■ ' + syst['release'] + ' ■ ' + syst['processor'];
+
+	if (json['content']['gpu']['available']) {
+		var gpumon = document.getElementById(obj.id + 'graphicSegment');
+		gpumon.style.display = null;
+	}
+
+	new Chartist.Line('.a'+ obj.id + 'chart', {
+		labels: [],
+		series: [ [], [], [] ],
+	}, {
+		fullWidth: true,
+		chartPadding: { right: 40 },
+		height: 200
+	});
+
+	segment.style.display = null;
 }
 
 function update() {
@@ -80,6 +89,13 @@ function set_temp_badge(obj, number) {
 		obj.classList.remove('badge-danger');
 		obj.classList.add('badge-success');
 	}
+}
+
+// https://stackoverflow.com/a/61787359
+async function file_get_contents(uri, callback) {
+    let res = await fetch(uri),
+        ret = await res.text(); 
+    return callback ? callback(ret) : ret;
 }
 
 window.onload = function() {
