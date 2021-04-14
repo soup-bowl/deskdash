@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<title>Dashboard</title>
+		<link href="node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+		<link href="dash.css" rel="stylesheet">
+	</head>
+	<body>
+		<div id="stage">
+			<div id="70" style="display:none">
+				<div class="px-4 py-5 my-5 text-center">
+					<h1 id="70machine" class="display-5 fw-bold">Machine</h1>
+					<p id="70spec">Computer specifications.</p>
+				</div>
+				<div class="px-4 py-5 my-5 text-center">
+					<div class="container">
+						<ul class="list-group">
+							<li class="list-group-item d-flex justify-content-between align-items-center">
+								Processor
+								<span id="70processorUsage" class="badge badge-success badge-pill">0</span>
+							</li>
+							<li class="list-group-item d-flex justify-content-between align-items-center">
+								Memory
+								<span id="70memoryUsage" class="badge badge-warning badge-pill">0</span>
+							</li>
+							<li id="70graphicSegment" class="list-group-item d-flex justify-content-between align-items-center">
+								Graphics
+								<span id="70graphicTemp" class="badge badge-danger badge-pill">0</span>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="node_modules/jquery/dist/jquery.js"></script>
+		<script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+		<script src="dash.js"></script>
+	</body>
+</html>

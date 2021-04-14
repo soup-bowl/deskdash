@@ -1,3 +1,7 @@
+# Python bits.
 .pytest_cache/
 __pycache__/
 pythonenv/
+
+# HTML/JS bits.
+node_modules/

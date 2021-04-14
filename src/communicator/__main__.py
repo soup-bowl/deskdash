@@ -8,7 +8,7 @@ port     = 43594
 
 class Server(BaseHTTPRequestHandler):
 	def do_GET(self):
-		self.set_headers(200, {'Content-type': 'application/json'})
+		self.set_headers(200, {'Content-type': 'application/json', 'Access-Control-Allow-Origin': '*'})
 		response = {
 			'success': True,
 			'content': Stats().get()
