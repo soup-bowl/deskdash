@@ -3,16 +3,29 @@ import subprocess
 import xml
 import xml.etree.ElementTree
 import psutil
+import platform
 
 class Stats(object):
 	def get(self):
 		return {
+			'system': self.get_system_information(),
 			'cpu': self.get_cpu_stats(),
 			'gpu': self.get_gpu_stats(),
 			'ram': self.get_ram_stats(),
 			'storage': self.get_storage_stats(),
 			'battery': self.get_battery_stats(),
 			'temps': self.get_temperatures()
+		}
+	
+	def get_system_information(self):
+		sys = platform.uname()
+		return {
+			'hostname': sys.node,
+			'operating_system': sys.system,
+			'version': sys.version,
+			'release': sys.release,
+			'processor' : sys.processor,
+			'processor_type': sys.machine,
 		}
 
 	def get_gpu_stats(self):
