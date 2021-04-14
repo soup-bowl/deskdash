@@ -55,8 +55,30 @@ function update() {
 
 				chart = document.getElementsByClassName('a' + key + 'chart')[0];
 				chart.__chartist__.update({'series': data[key].series});
+
+				gputmp = document.getElementById(obj.id + 'graphicTemp');
+				tmpred = stat['gpu']['gpu_temp_now'];
+				gputmp.innerHTML = tmpred + '°C';
+				set_temp_badge(gputmp, tmpred);
+				
 			})
 			.catch(err => console.log(err));
+	}
+}
+
+function set_temp_badge(obj, number) {
+	if (number > 60) {
+		obj.classList.remove('badge-success');
+		obj.classList.remove('badge-danger');
+		obj.classList.add('badge-warning');
+	} else if(number > 80) {
+		obj.classList.remove('badge-success');
+		obj.classList.remove('badge-warning');
+		obj.classList.add('badge-danger');
+	} else {
+		obj.classList.remove('badge-warning');
+		obj.classList.remove('badge-danger');
+		obj.classList.add('badge-success');
 	}
 }
 
