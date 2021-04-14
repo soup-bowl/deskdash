@@ -28,6 +28,10 @@ body {
     stroke: #ffff47;
 }
 
+.ct-series-c .ct-bar, .ct-series-c .ct-line, .ct-series-c .ct-point, .ct-series-c .ct-slice-donut {
+    stroke: #5656ff;
+}
+
 .ct-grid, .ct-label {
 	stroke: rgb(193 193 193);
 	color: rgb(193 193 193);

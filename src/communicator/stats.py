@@ -40,8 +40,14 @@ class Stats(object):
 		gpu_temp_now = int(gpu_temp.find("gpu_temp").text.rpartition('C')[0])
 		gpu_temp_max = int(gpu_temp.find("gpu_temp_max_threshold").text.rpartition('C')[0])
 
+		gpu_util     = gpu.find("utilization")
+		gpu_usage    = int(gpu_util.find("gpu_util").text.rpartition('%')[0])
+		gpu_m_usage  = int(gpu_util.find("memory_util").text.rpartition('%')[0])
+
 		return {
 			'available': True,
+			'gpu_usage': gpu_usage,
+			'gpu_memory_usage': gpu_m_usage,
 			'gpu_temp_now': gpu_temp_now, 
 			'gpu_temp_max': gpu_temp_max
 		}
