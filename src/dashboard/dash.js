@@ -56,6 +56,7 @@ function update() {
 
 				document.getElementById(obj.id + 'processorUsage').innerHTML = cpu  + '%';
 				document.getElementById(obj.id + 'memoryUsage').innerHTML = mem + '%';
+				document.getElementById(obj.id + 'swapUsage').innerHTML = stat['ram']['swap_memory_usage'] + '%';
 				document.getElementById(obj.id + 'graphicUsage').innerHTML = gpu + '%';
 
 				data[key].series[0].push(cpu); if ( data[key].series[0].length > 10 ) { data[key].series[0].shift(); }
