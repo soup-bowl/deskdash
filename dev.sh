@@ -8,6 +8,8 @@ python3 -m venv pythonenv
 source pythonenv/bin/activate
 pythonenv/bin/pip3 install -r requirements.txt
 
+( cd src/dashboard && npm install )
+
 echo ""
 echo "Done - Ready for development. Upgrade terminal with:"
 echo "source pythonenv/bin/activate"
