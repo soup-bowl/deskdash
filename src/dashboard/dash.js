@@ -14,6 +14,11 @@ function init() {
 				document.getElementById(obj.id + 'machine').innerHTML = syst['hostname'];
 				document.getElementById(obj.id + 'spec').innerHTML = syst['operating_system'] + ' ■ ' + syst['release'] + ' ■ ' + syst['processor'];
 
+				if (json['content']['gpu']['available']) {
+					var gpumon = document.getElementById(obj.id + 'graphicSegment');
+					gpumon.style.display = null;
+				}
+
 				new Chartist.Line('.a'+ obj.id + 'chart', {
 					labels: [],
 					series: [ [], [], [] ],
@@ -42,7 +47,7 @@ function update() {
 
 				document.getElementById(obj.id + 'processorUsage').innerHTML = cpu  + '%';
 				document.getElementById(obj.id + 'memoryUsage').innerHTML = mem + '%';
-				document.getElementById(obj.id + 'graphicTemp').innerHTML = gpu + '%';
+				document.getElementById(obj.id + 'graphicUsage').innerHTML = gpu + '%';
 
 				data[key].series[0].push(cpu); if ( data[key].series[0].length > 10 ) { data[key].series[0].shift(); }
 				data[key].series[1].push(mem); if ( data[key].series[1].length > 10 ) { data[key].series[1].shift(); }
