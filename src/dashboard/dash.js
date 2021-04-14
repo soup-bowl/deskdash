@@ -1,5 +1,5 @@
 var endpoints = { 70: {'id': 70, 'endpoint': 'http://localhost:43594/'} };
-var data      = {70: []};
+var data      = { 70: {'series': [ [], [], [] ]} };
 
 function init() {
 	for (let key in endpoints) {
@@ -8,6 +8,7 @@ function init() {
 			.then(response => response.json())
 			.then(json => {
 				var segment = document.getElementById(obj.id);
+				//data[key]['series'] = [ [], [] ];
 				
 				syst = json['content']['system'];
 				document.getElementById(obj.id + 'machine').innerHTML = syst['hostname'];
@@ -15,7 +16,7 @@ function init() {
 
 				segment.style.display = null;
 			})
-			.catch(err => null);
+			.catch(err => console.log(err));
 	}
 }
 
@@ -26,11 +27,17 @@ function update() {
 			.then(response => response.json())
 			.then(json => {
 				stat = json['content'];
-				document.getElementById(obj.id + 'processorUsage').innerHTML = stat['cpu']['cpu_usage']  + '%';
-				document.getElementById(obj.id + 'memoryUsage').innerHTML = stat['ram']['real_memory_usage'] + '%';
+				cpu = stat['cpu']['cpu_usage'];
+				mem = stat['ram']['real_memory_usage'];
+
+				document.getElementById(obj.id + 'processorUsage').innerHTML = cpu  + '%';
+				document.getElementById(obj.id + 'memoryUsage').innerHTML = mem + '%';
 				document.getElementById(obj.id + 'graphicTemp').innerHTML = stat['gpu']['gpu_temp_now'] + '°C';
+
+				data[key].series[0].push(cpu); if ( data[key].series[0].length > 10 ) { data[key].series[0].shift(); }
+				data[key].series[1].push(mem); if ( data[key].series[1].length > 10 ) { data[key].series[1].shift(); }
 			})
-			.catch(err => null);
+			.catch(err => console.log(err));
 	}
 }
 
