@@ -7,3 +7,28 @@ body {
 	background-color: black;
 	border: 1px solid rgb(193 193 193 / 13%);
 }
+
+.list-processor {
+	border-left-color: #ff3434;
+}
+
+.list-memory {
+	border-left-color: #ffff47;
+}
+
+.list-graphics {
+	border-left-color: #5656ff;
+}
+
+.ct-series-a .ct-bar, .ct-series-a .ct-line, .ct-series-a .ct-point, .ct-series-a .ct-slice-donut {
+    stroke: #ff3434;
+}
+
+.ct-series-b .ct-bar, .ct-series-b .ct-line, .ct-series-b .ct-point, .ct-series-b .ct-slice-donut {
+    stroke: #ffff47;
+}
+
+.ct-grid, .ct-label {
+	stroke: rgb(193 193 193);
+	color: rgb(193 193 193);
+}

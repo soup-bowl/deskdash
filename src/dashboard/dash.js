@@ -16,12 +16,11 @@ function init() {
 
 				new Chartist.Line('.a'+ obj.id + 'chart', {
 					labels: [],
-					series: [ [], [] ]
+					series: [ [], [] ],
 				}, {
 					fullWidth: true,
-					chartPadding: {
-						right: 40
-					}
+					chartPadding: { right: 40 },
+					height: 200
 				});
 
 				segment.style.display = null;
