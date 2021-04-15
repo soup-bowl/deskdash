@@ -1,5 +1,5 @@
 var endpoints;
-var data      = { 0: {'series': [ [], [], [] ]} };
+var data = [];
 
 function init() {
 	document.getElementById('loading').style.display = null;
@@ -23,6 +23,7 @@ function init() {
 
 function load_new(id, json) {
 	var segment = document.getElementById(id);
+	data[id] = {'series': [ [], [] ]};
 	
 	syst = json['content']['system'];
 	document.getElementById(id + 'machine').innerHTML = syst['hostname'];
@@ -30,6 +31,7 @@ function load_new(id, json) {
 
 	if (json['content']['gpu']['available']) {
 		var gpumon = document.getElementById(id + 'graphicSegment');
+		data[id].series.push([]);
 		gpumon.style.display = null;
 	}
 
