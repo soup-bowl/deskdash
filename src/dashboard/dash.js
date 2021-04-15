@@ -2,6 +2,7 @@ var endpoints;
 var data = [];
 var currentWindow = -1;
 
+// --- Initalisation segment ---
 function init() {
 	document.getElementById('loading').style.display = null;
 	document.getElementById('stage').innerHTML = '';
@@ -10,25 +11,26 @@ function init() {
 			fetch(endpoints.views[index].endpoint)
 				.then(response => response.json())
 				.then(json => {
-					file_get_contents("segments/communicator.html").then(page => {
-						rechanged = page.replaceAll('{{CHANGE}}', index).replaceAll('{{COLOR}}', endpoints.views[index].background);
-						document.getElementById("stage").insertAdjacentHTML('beforeend', rechanged);
-
-						load_new_communicator(index, json);
-					});
+					load_segment('communicator', index, function() { load_new_communicator(index, json); }, endpoints.views[index].background);
 				})
 				.catch(err => console.log(err));
 		} else if ( endpoints.views[index].type == "helloworld" ) {
-			file_get_contents("segments/helloworld.html").then(page => {
-				rechanged = page.replaceAll('{{CHANGE}}', index).replaceAll('{{COLOR}}', endpoints.views[index].background);
-				document.getElementById("stage").insertAdjacentHTML('beforeend', rechanged);
-			});
+			load_segment('helloworld', index, null, endpoints.views[index].background);
 		} else {
 			console.log("Invalid type: " + endpoints.views[index].type);
 			continue;
 		}
 	}
 	document.getElementById('loading').style.display = 'none';
+}
+
+function load_segment(segment, identifier, callback = null, color = "#000") {
+	file_get_contents("segments/" + segment + ".html").then(page => {
+		rechanged = page.replaceAll('{{CHANGE}}', identifier).replaceAll('{{COLOR}}', color);
+		document.getElementById("stage").insertAdjacentHTML('beforeend', rechanged);
+
+		typeof callback === 'function' && callback();
+	});
 }
 
 function load_new_communicator(id, json) {
@@ -60,6 +62,8 @@ function load_new_communicator(id, json) {
 		}
 	});
 }
+
+// --- Continuous update segment ---
 
 function update() {
 	for (let index = 0; index < endpoints.views.length; index++) {
@@ -145,6 +149,8 @@ function change_carousel() {
 		}
 	}
 }
+
+// --- Init ---
 
 window.onload = function() {
 	fetch('config.json')
