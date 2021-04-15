@@ -12,7 +12,7 @@ function init() {
 				.then(response => response.json())
 				.then(json => {
 					file_get_contents("segments/communicator.html").then(page => {
-						rechanged = page.replaceAll('{{CHANGE}}', index);
+						rechanged = page.replaceAll('{{CHANGE}}', index).replaceAll('{{COLOR}}', obj.background);
 						document.getElementById("stage").insertAdjacentHTML('beforeend', rechanged);
 
 						load_new_communicator(index, json);
@@ -21,7 +21,7 @@ function init() {
 				.catch(err => console.log(err));
 		} else if ( obj.type == "helloworld" ) {
 			file_get_contents("segments/helloworld.html").then(page => {
-				rechanged = page.replaceAll('{{CHANGE}}', index);
+				rechanged = page.replaceAll('{{CHANGE}}', index).replaceAll('{{COLOR}}', obj.background);
 				document.getElementById("stage").insertAdjacentHTML('beforeend', rechanged);
 			});
 		} else {
@@ -33,7 +33,7 @@ function init() {
 }
 
 function load_new_communicator(id, json) {
-	var segment = document.getElementById(id);
+	var segment = document.getElementById("e" + id);
 	data[id] = {'series': [ [], [] ]};
 	
 	syst = json['content']['system'];
@@ -140,9 +140,9 @@ function change_carousel() {
 
 	for (let index = 0; index < availableWindows; index++) {
 		if (index == currentWindow) {
-			document.getElementById(index).style.display = null;
+			document.getElementById("e"+index).classList.remove('hide');
 		} else {
-			document.getElementById(index).style.display = 'none';
+			document.getElementById("e"+index).classList.add('hide');
 		}
 	}
 }

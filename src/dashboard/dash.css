@@ -19,8 +19,20 @@ body {
     left: 50%;
 }
 
+.roulette-item {
+	position: fixed;
+	width:100%;
+	height:100%;
+	top: 0;
+	left: 0;
+}
+
+.hide {
+	display: none;
+}
+
 .list-group-item {
-	background-color: black;
+	background-color: inherit;
 	border: 1px solid rgb(193 193 193 / 13%);
 }
 
