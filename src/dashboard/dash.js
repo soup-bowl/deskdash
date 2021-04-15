@@ -6,26 +6,25 @@ function init() {
 	document.getElementById('loading').style.display = null;
 	document.getElementById('stage').innerHTML = '';
 	for (let index = 0; index < endpoints.views.length; index++) {
-		var obj = endpoints.views[index];
-		if ( obj.type == "communicator" ) {
-			fetch(obj.endpoint)
+		if ( endpoints.views[index].type == "communicator" ) {
+			fetch(endpoints.views[index].endpoint)
 				.then(response => response.json())
 				.then(json => {
 					file_get_contents("segments/communicator.html").then(page => {
-						rechanged = page.replaceAll('{{CHANGE}}', index).replaceAll('{{COLOR}}', obj.background);
+						rechanged = page.replaceAll('{{CHANGE}}', index).replaceAll('{{COLOR}}', endpoints.views[index].background);
 						document.getElementById("stage").insertAdjacentHTML('beforeend', rechanged);
 
 						load_new_communicator(index, json);
 					});
 				})
 				.catch(err => console.log(err));
-		} else if ( obj.type == "helloworld" ) {
+		} else if ( endpoints.views[index].type == "helloworld" ) {
 			file_get_contents("segments/helloworld.html").then(page => {
-				rechanged = page.replaceAll('{{CHANGE}}', index).replaceAll('{{COLOR}}', obj.background);
+				rechanged = page.replaceAll('{{CHANGE}}', index).replaceAll('{{COLOR}}', endpoints.views[index].background);
 				document.getElementById("stage").insertAdjacentHTML('beforeend', rechanged);
 			});
 		} else {
-			console.log("Invalid type: " + obj.type);
+			console.log("Invalid type: " + endpoints.views[index].type);
 			continue;
 		}
 	}
