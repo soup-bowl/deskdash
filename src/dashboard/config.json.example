@@ -1,6 +1,5 @@
-{
-	"70": {
-		"id": 70, 
+[
+	{
 		"endpoint": "http://localhost:43594/"
 	}
-}
+]
