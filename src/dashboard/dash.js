@@ -6,17 +6,22 @@ function init() {
 	document.getElementById('stage').innerHTML = '';
 	for (let index = 0; index < endpoints.length; index++) {
 		var obj = endpoints[index];
-		fetch(obj.endpoint)
-			.then(response => response.json())
-			.then(json => {
-				file_get_contents("segments/communicator.html").then(page => {
-					rechanged = page.replaceAll('{{CHANGE}}', index);
-					document.getElementById("stage").innerHTML = rechanged;
+		if ( obj.type == "communicator" ) {
+			fetch(obj.endpoint)
+				.then(response => response.json())
+				.then(json => {
+					file_get_contents("segments/communicator.html").then(page => {
+						rechanged = page.replaceAll('{{CHANGE}}', index);
+						document.getElementById("stage").innerHTML = rechanged;
 
-					load_new(index, json);
-				});
-			})
-			.catch(err => console.log(err));
+						load_new(index, json);
+					});
+				})
+				.catch(err => console.log(err));
+		} else {
+			console.log("Invalid type: " + obj.type);
+			continue;
+		}
 	}
 	document.getElementById('loading').style.display = 'none';
 }
@@ -56,41 +61,45 @@ function load_new(id, json) {
 function update() {
 	for (let index = 0; index < endpoints.length; index++) {
 		var obj = endpoints[index];
-		fetch(obj.endpoint)
-			.then(response => response.json())
-			.then(json => {
-				stat = json['content'];
+		if ( obj.type == "communicator" ) {
+			fetch(obj.endpoint)
+				.then(response => response.json())
+				.then(json => {
+					stat = json['content'];
 
-				if (stat['cpu']['available']) {
-					cpu = stat['cpu'];
-					document.getElementById(index + 'processorUsage').innerHTML = 'Usage: ' + cpu['cpu_usage']  + '%';
+					if (stat['cpu']['available']) {
+						cpu = stat['cpu'];
+						document.getElementById(index + 'processorUsage').innerHTML = 'Usage: ' + cpu['cpu_usage']  + '%';
 
-					data[index].series[0].push(cpu['cpu_usage']); if ( data[index].series[0].length > 10 ) { data[index].series[0].shift(); }
-				}
+						data[index].series[0].push(cpu['cpu_usage']); if ( data[index].series[0].length > 10 ) { data[index].series[0].shift(); }
+					}
 
-				if (stat['ram']['available']) {
-					mem = stat['ram'];
-					document.getElementById(index + 'memoryUsage').innerHTML = 'Usage: ' + mem['real_memory_usage'] + '%';
-					document.getElementById(index + 'swapUsage').innerHTML = 'Swap: ' + mem['swap_memory_usage'] + '%';
+					if (stat['ram']['available']) {
+						mem = stat['ram'];
+						document.getElementById(index + 'memoryUsage').innerHTML = 'Usage: ' + mem['real_memory_usage'] + '%';
+						document.getElementById(index + 'swapUsage').innerHTML = 'Swap: ' + mem['swap_memory_usage'] + '%';
 
-					data[index].series[1].push(mem['real_memory_usage']); if ( data[index].series[1].length > 10 ) { data[index].series[1].shift(); }
-				}
+						data[index].series[1].push(mem['real_memory_usage']); if ( data[index].series[1].length > 10 ) { data[index].series[1].shift(); }
+					}
 
-				if (stat['gpu']['available']) {
-					gpu = stat['gpu'];
-					document.getElementById(index + 'graphicUsage').innerHTML = 'Usage: ' + gpu['gpu_usage'] + '%';
+					if (stat['gpu']['available']) {
+						gpu = stat['gpu'];
+						document.getElementById(index + 'graphicUsage').innerHTML = 'Usage: ' + gpu['gpu_usage'] + '%';
 
-					data[index].series[2].push(gpu['gpu_usage']); if ( data[index].series[2].length > 10 ) { data[index].series[2].shift(); }
+						data[index].series[2].push(gpu['gpu_usage']); if ( data[index].series[2].length > 10 ) { data[index].series[2].shift(); }
 
-					gputmp = document.getElementById(index + 'graphicTemp');
-					gputmp.innerHTML = 'Temp ' + gpu['gpu_temp_now'] + '°C';
-					set_temp_badge(gputmp, gpu['gpu_temp_now']);
-				}
+						gputmp = document.getElementById(index + 'graphicTemp');
+						gputmp.innerHTML = 'Temp ' + gpu['gpu_temp_now'] + '°C';
+						set_temp_badge(gputmp, gpu['gpu_temp_now']);
+					}
 
-				chart = document.getElementsByClassName('a' + index + 'chart')[0];
-				chart.__chartist__.update({'series': data[index].series});
-			})
-			.catch(err => console.log(err));
+					chart = document.getElementsByClassName('a' + index + 'chart')[0];
+					chart.__chartist__.update({'series': data[index].series});
+				})
+				.catch(err => console.log(err));
+		} else {
+			continue;
+		}
 	}
 }
 

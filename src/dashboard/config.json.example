@@ -1,5 +1,6 @@
 [
 	{
+		"type": "communicator",
 		"endpoint": "http://localhost:43594/"
 	}
 ]
