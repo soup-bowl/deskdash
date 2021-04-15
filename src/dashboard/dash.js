@@ -1,23 +1,29 @@
 var endpoints;
 var data = [];
+var currentWindow = -1;
 
 function init() {
 	document.getElementById('loading').style.display = null;
 	document.getElementById('stage').innerHTML = '';
-	for (let index = 0; index < endpoints.length; index++) {
-		var obj = endpoints[index];
+	for (let index = 0; index < endpoints.views.length; index++) {
+		var obj = endpoints.views[index];
 		if ( obj.type == "communicator" ) {
 			fetch(obj.endpoint)
 				.then(response => response.json())
 				.then(json => {
 					file_get_contents("segments/communicator.html").then(page => {
 						rechanged = page.replaceAll('{{CHANGE}}', index);
-						document.getElementById("stage").innerHTML = rechanged;
+						document.getElementById("stage").insertAdjacentHTML('beforeend', rechanged);
 
-						load_new(index, json);
+						load_new_communicator(index, json);
 					});
 				})
 				.catch(err => console.log(err));
+		} else if ( obj.type == "helloworld" ) {
+			file_get_contents("segments/helloworld.html").then(page => {
+				rechanged = page.replaceAll('{{CHANGE}}', index);
+				document.getElementById("stage").insertAdjacentHTML('beforeend', rechanged);
+			});
 		} else {
 			console.log("Invalid type: " + obj.type);
 			continue;
@@ -26,7 +32,7 @@ function init() {
 	document.getElementById('loading').style.display = 'none';
 }
 
-function load_new(id, json) {
+function load_new_communicator(id, json) {
 	var segment = document.getElementById(id);
 	data[id] = {'series': [ [], [] ]};
 	
@@ -54,13 +60,11 @@ function load_new(id, json) {
 			showGrid: false
 		}
 	});
-
-	segment.style.display = null;
 }
 
 function update() {
-	for (let index = 0; index < endpoints.length; index++) {
-		var obj = endpoints[index];
+	for (let index = 0; index < endpoints.views.length; index++) {
+		var obj = endpoints.views[index];
 		if ( obj.type == "communicator" ) {
 			fetch(obj.endpoint)
 				.then(response => response.json())
@@ -126,6 +130,23 @@ async function file_get_contents(uri, callback) {
     return callback ? callback(ret) : ret;
 }
 
+function change_carousel() {
+	availableWindows = document.getElementById("stage").querySelectorAll("#stage>div").length;
+	currentWindow++;
+	
+	if ( currentWindow >= availableWindows ) {
+		currentWindow = 0;
+	}
+
+	for (let index = 0; index < availableWindows; index++) {
+		if (index == currentWindow) {
+			document.getElementById(index).style.display = null;
+		} else {
+			document.getElementById(index).style.display = 'none';
+		}
+	}
+}
+
 window.onload = function() {
 	fetch('config.json')
 		.then(response => response.json())
@@ -136,6 +157,8 @@ window.onload = function() {
 			var updateLoop = window.setInterval(function(){
 				update();
 			}, 5000);
+
+			var carousel = window.setInterval(change_carousel, endpoints.speed);
 		})
 		.catch(err => console.log(err));
 };
