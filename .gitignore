@@ -5,3 +5,4 @@ pythonenv/
 
 # HTML/JS bits.
 node_modules/
+src/dashboard/config.json

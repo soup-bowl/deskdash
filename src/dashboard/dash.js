@@ -1,4 +1,4 @@
-var endpoints = { 70: {'id': 70, 'endpoint': 'http://localhost:43594/'} };
+var endpoints;
 var data      = { 70: {'series': [ [], [], [] ]} };
 
 function init() {
@@ -117,9 +117,15 @@ async function file_get_contents(uri, callback) {
 }
 
 window.onload = function() {
-	init();
+	fetch('config.json')
+		.then(response => response.json())
+		.then(json => {
+			endpoints = json;
+			init();
 
-	var updateLoop = window.setInterval(function(){
-		update();
-	}, 5000);
+			var updateLoop = window.setInterval(function(){
+				update();
+			}, 5000);
+		})
+		.catch(err => console.log(err));
 };
