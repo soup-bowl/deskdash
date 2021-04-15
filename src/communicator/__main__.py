@@ -3,7 +3,7 @@ from communicator.stats import Stats
 import json
 import time
 
-hostname = "localhost"
+hostname = "0.0.0.0"
 port     = 43594
 
 class Server(BaseHTTPRequestHandler):
