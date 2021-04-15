@@ -24,9 +24,13 @@ function init() {
 	document.getElementById('loading').style.display = 'none';
 }
 
-function load_segment(segment, identifier, callback = null, color = "#000") {
+function load_segment(segment, identifier, callback = null, color = null) {
+	bgcolor = (color !== null) ? "style=\"background-color:" + color + "\"" : ""; 
 	file_get_contents("segments/" + segment + ".html").then(page => {
-		rechanged = page.replaceAll('{{CHANGE}}', identifier).replaceAll('{{COLOR}}', color);
+		before = "<div id=\"e" + identifier + "\" class=\"roulette-item hide\" " + bgcolor + ">";
+		after = "</div>";
+
+		rechanged = before + page.replaceAll('{{CHANGE}}', identifier).replaceAll('{{COLOR}}', color) + after;
 		document.getElementById("stage").insertAdjacentHTML('beforeend', rechanged);
 
 		typeof callback === 'function' && callback();
