@@ -2,6 +2,8 @@ var endpoints = { 70: {'id': 70, 'endpoint': 'http://localhost:43594/'} };
 var data      = { 70: {'series': [ [], [], [] ]} };
 
 function init() {
+	document.getElementById('loading').style.display = null;
+	document.getElementById('stage').innerHTML = '';
 	for (let key in endpoints) {
 		var obj = endpoints[key];
 		fetch(obj.endpoint)
@@ -16,6 +18,7 @@ function init() {
 			})
 			.catch(err => console.log(err));
 	}
+	document.getElementById('loading').style.display = 'none';
 }
 
 function load_new(obj, json) {
@@ -37,7 +40,13 @@ function load_new(obj, json) {
 	}, {
 		fullWidth: true,
 		chartPadding: { right: 40 },
-		height: 200
+		height: 200,
+		axisY: {
+			high: 100
+		},
+		axisX: {
+			showGrid: false
+		}
 	});
 
 	segment.style.display = null;
@@ -50,27 +59,35 @@ function update() {
 			.then(response => response.json())
 			.then(json => {
 				stat = json['content'];
-				cpu = stat['cpu']['cpu_usage'];
-				gpu = stat['gpu']['gpu_usage'];
-				mem = stat['ram']['real_memory_usage'];
 
-				document.getElementById(obj.id + 'processorUsage').innerHTML = cpu  + '%';
-				document.getElementById(obj.id + 'memoryUsage').innerHTML = mem + '%';
-				document.getElementById(obj.id + 'swapUsage').innerHTML = stat['ram']['swap_memory_usage'] + '%';
-				document.getElementById(obj.id + 'graphicUsage').innerHTML = gpu + '%';
+				if (stat['cpu']['available']) {
+					cpu = stat['cpu'];
+					document.getElementById(obj.id + 'processorUsage').innerHTML = 'Usage: ' + cpu['cpu_usage']  + '%';
 
-				data[key].series[0].push(cpu); if ( data[key].series[0].length > 10 ) { data[key].series[0].shift(); }
-				data[key].series[1].push(mem); if ( data[key].series[1].length > 10 ) { data[key].series[1].shift(); }
-				data[key].series[2].push(gpu); if ( data[key].series[2].length > 10 ) { data[key].series[2].shift(); }
+					data[key].series[0].push(cpu['cpu_usage']); if ( data[key].series[0].length > 10 ) { data[key].series[0].shift(); }
+				}
+
+				if (stat['ram']['available']) {
+					mem = stat['ram'];
+					document.getElementById(obj.id + 'memoryUsage').innerHTML = 'Usage: ' + mem['real_memory_usage'] + '%';
+					document.getElementById(obj.id + 'swapUsage').innerHTML = 'Swap: ' + mem['swap_memory_usage'] + '%';
+
+					data[key].series[1].push(mem['real_memory_usage']); if ( data[key].series[1].length > 10 ) { data[key].series[1].shift(); }
+				}
+
+				if (stat['gpu']['available']) {
+					gpu = stat['gpu'];
+					document.getElementById(obj.id + 'graphicUsage').innerHTML = 'Usage: ' + gpu['gpu_usage'] + '%';
+
+					data[key].series[2].push(gpu['gpu_usage']); if ( data[key].series[2].length > 10 ) { data[key].series[2].shift(); }
+
+					gputmp = document.getElementById(obj.id + 'graphicTemp');
+					gputmp.innerHTML = 'Temp ' + gpu['gpu_temp_now'] + '°C';
+					set_temp_badge(gputmp, gpu['gpu_temp_now']);
+				}
 
 				chart = document.getElementsByClassName('a' + key + 'chart')[0];
 				chart.__chartist__.update({'series': data[key].series});
-
-				gputmp = document.getElementById(obj.id + 'graphicTemp');
-				tmpred = stat['gpu']['gpu_temp_now'];
-				gputmp.innerHTML = tmpred + '°C';
-				set_temp_badge(gputmp, tmpred);
-				
 			})
 			.catch(err => console.log(err));
 	}
