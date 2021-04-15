@@ -14,6 +14,8 @@ function init() {
 					load_segment('communicator', index, function() { load_new_communicator(index, json); }, endpoints.views[index].background);
 				})
 				.catch(err => console.log(err));
+		} else if ( endpoints.views[index].type == "timedate" ) {
+			load_segment('timedate', index, null, endpoints.views[index].background);
 		} else if ( endpoints.views[index].type == "helloworld" ) {
 			load_segment('helloworld', index, null, endpoints.views[index].background);
 		} else {
@@ -108,6 +110,10 @@ function update() {
 					chart.__chartist__.update({'series': data[index].series});
 				})
 				.catch(err => console.log(err));
+		} else if ( obj.type == "timedate" ) {
+			var dt = new Date();
+			document.getElementById(index + 'time').innerHTML = dt.toLocaleTimeString();
+			document.getElementById(index + 'date').innerHTML = dt.toLocaleDateString();
 		} else {
 			continue;
 		}
