@@ -1,6 +1,8 @@
 # Desktop Dashboard
 Displays information about enrolled network devices. **Unfinished - do not use without developer experience**.
 
+![2021-04-16-161649_480x800_scrot](https://user-images.githubusercontent.com/11209477/115046438-5962d400-9ecf-11eb-88ef-f7982495bb94.png)
+
 ## Communicator
 Cross-platform low requirement Python API to report system information and current stats across the network.
 
