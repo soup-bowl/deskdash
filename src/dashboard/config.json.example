@@ -1,14 +1,14 @@
 {
 	"views": [
 		{
-			"type": "helloworld",
-			"background": "#02009a"
+			"type": "timedate",
+			"background": "#02009a",
+			"randomBackground": true
 		},
 		{
 			"type": "communicator",
 			"endpoint": "http://localhost:43594/",
 			"background": "#210000"
 		}
-	],
-	"speed": 30000
+	]
 }

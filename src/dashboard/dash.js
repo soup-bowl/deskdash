@@ -1,23 +1,34 @@
-var endpoints;
-var data = [];
-var currentWindow = -1;
+/**
+ * Deskdash - Raspberry Pi equipment monitor.
+ *
+ * @author soup-bowl <code@soupbowl.io>
+ * @package deskdash
+ */
+
+var endpoints; // Loaded with configuration data from config.json, called at the bottom of this file.
+var data = []; // Populated with collected data from participants.
 
 // --- Initalisation segment ---
+
+/**
+ * Initialises the stage.
+ */
 function init() {
 	document.getElementById('loading').style.display = null;
 	document.getElementById('stage').innerHTML = '';
 	for (let index = 0; index < endpoints.views.length; index++) {
+		var first = ( index == 0 ) ? true : false;
 		if ( endpoints.views[index].type == "communicator" ) {
 			fetch(endpoints.views[index].endpoint)
 				.then(response => response.json())
 				.then(json => {
-					load_segment('communicator', index, function() { load_new_communicator(index, json); }, endpoints.views[index].background);
+					load_segment('communicator', index, endpoints.views[index], first, function() { load_new_communicator(index, json); });
 				})
 				.catch(err => console.log(err));
 		} else if ( endpoints.views[index].type == "timedate" ) {
-			load_segment('timedate', index, null, endpoints.views[index].background);
+			load_segment('timedate', index, endpoints.views[index], first, null);
 		} else if ( endpoints.views[index].type == "helloworld" ) {
-			load_segment('helloworld', index, null, endpoints.views[index].background);
+			load_segment('helloworld', index, endpoints.views[index], first, null);
 		} else {
 			console.log("Invalid type: " + endpoints.views[index].type);
 			continue;
@@ -26,26 +37,48 @@ function init() {
 	document.getElementById('loading').style.display = 'none';
 }
 
-function load_segment(segment, identifier, callback = null, color = null) {
-	bgcolor = (color !== null) ? "style=\"background-color:" + color + "\"" : ""; 
+/**
+ * Loads a segment into the stage cycles.
+ *
+ * @param {string}   segment         Name of a HTML file in segments folder. Just the filename, no extension.
+ * @param {int}      identifier      Number of the loop. Must not have been already used.
+ * @param {*}        settings        The segment-specific portion of the config file.
+ * @param {bool}     [first=false]   If this is the first in the loop (will add carousel start code).
+ * @param {callback} [callback=null] If provided, this function will be called after the file is loaded.
+ */
+function load_segment(segment, identifier, settings, first = false, callback = null) {
+	activebit  = (first) ? "carousel-item active" : "carousel-item";
+	bgcolor    = (settings.background !== null) ? "background-color:" + settings.background + ";" : "";
+	bgimagecss = (settings.randomBackground || typeof settings.backgroundUrl === 'string') ? " bgimage" : "";
+	bgimg      = (typeof settings.backgroundUrl === 'string') ? "background-image: url('" + settings.backgroundUrl + "');" : "";
+	bgimgauto  = (settings.randomBackground) ? "background-image: url('https://source.unsplash.com/daily');" : "";
+
 	file_get_contents("segments/" + segment + ".html").then(page => {
-		before = "<div id=\"e" + identifier + "\" class=\"roulette-item hide\" " + bgcolor + ">";
+		before = "<div id=\"e" + identifier + "\" class=\"" + activebit + " roulette-item " + bgimagecss + "\" style=\"" + bgcolor + bgimg + bgimgauto + "\">";
 		after = "</div>";
 
-		rechanged = before + page.replaceAll('{{CHANGE}}', identifier).replaceAll('{{COLOR}}', color) + after;
+		rechanged = before + page.replaceAll('{{CHANGE}}', identifier).replaceAll('{{COLOR}}', settings.background) + after;
 		document.getElementById("stage").insertAdjacentHTML('beforeend', rechanged);
 
 		typeof callback === 'function' && callback();
 	});
 }
 
-function load_new_communicator(id, json) {
+/**
+ * Loads communicator-related settings and configurations.
+ *
+ * @param {int}    id             Identifier on the stage. 
+ * @param {string} json           JSON API response from the source API. 
+ * @param {string} [splitter='•'] Used in the subheading to split-up data segments.
+ */
+function load_new_communicator(id, json, splitter = '•') {
+	splitter = "<span class=\"splitter\">" + splitter + "</span>";
 	var segment = document.getElementById("e" + id);
 	data[id] = {'series': [ [], [] ]};
 	
 	syst = json['content']['system'];
 	document.getElementById(id + 'machine').innerHTML = syst['hostname'];
-	document.getElementById(id + 'spec').innerHTML = syst['operating_system'] + ' ■ ' + syst['release'] + ' ■ ' + syst['processor'];
+	document.getElementById(id + 'spec').innerHTML = syst['operating_system'] + splitter + syst['release'] + splitter + syst['processor'];
 
 	if (json['content']['gpu']['available']) {
 		var gpumon = document.getElementById(id + 'graphicSegment');
@@ -71,6 +104,9 @@ function load_new_communicator(id, json) {
 
 // --- Continuous update segment ---
 
+/**
+ * Initiates an update data routine across all the stages.
+ */
 function update() {
 	for (let index = 0; index < endpoints.views.length; index++) {
 		var obj = endpoints.views[index];
@@ -112,7 +148,7 @@ function update() {
 				.catch(err => console.log(err));
 		} else if ( obj.type == "timedate" ) {
 			var dt = new Date();
-			document.getElementById(index + 'time').innerHTML = dt.toLocaleTimeString();
+			document.getElementById(index + 'time').innerHTML = dt.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit', hour12: true});
 			document.getElementById(index + 'date').innerHTML = dt.toLocaleDateString();
 		} else {
 			continue;
@@ -120,6 +156,11 @@ function update() {
 	}
 }
 
+/**
+ * Sets the colour of the badges based upon their numerical input. Green for low, yellow for above 60C, and red for 80C.
+ * @param {int} obj    The object we're adding the CSS classes too.
+ * @param {int} number The temperature in celcius.
+ */
 function set_temp_badge(obj, number) {
 	if (number > 60) {
 		obj.classList.remove('badge-success');
@@ -136,28 +177,18 @@ function set_temp_badge(obj, number) {
 	}
 }
 
-// https://stackoverflow.com/a/61787359
+/**
+ * Replicates the PHP functionality of the same name. Sorry, can't take the PHP dev out of me :(
+ *
+ * @url https://stackoverflow.com/a/61787359
+ * @param {string}   uri      URL to get stuff from.
+ * @param {callback} callback Callback routine with the response (or attach .then).
+ * @returns 
+ */
 async function file_get_contents(uri, callback) {
     let res = await fetch(uri),
         ret = await res.text(); 
     return callback ? callback(ret) : ret;
-}
-
-function change_carousel() {
-	availableWindows = document.getElementById("stage").querySelectorAll("#stage>div").length;
-	currentWindow++;
-	
-	if ( currentWindow >= availableWindows ) {
-		currentWindow = 0;
-	}
-
-	for (let index = 0; index < availableWindows; index++) {
-		if (index == currentWindow) {
-			document.getElementById("e"+index).classList.remove('hide');
-		} else {
-			document.getElementById("e"+index).classList.add('hide');
-		}
-	}
 }
 
 // --- Init ---
@@ -172,8 +203,6 @@ window.onload = function() {
 			var updateLoop = window.setInterval(function(){
 				update();
 			}, 5000);
-
-			var carousel = window.setInterval(change_carousel, endpoints.speed);
 		})
 		.catch(err => console.log(err));
 };

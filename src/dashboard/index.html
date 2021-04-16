@@ -5,13 +5,26 @@
 		<title>Dashboard</title>
 		<link href="node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
 		<link href="node_modules/chartist/dist/chartist.css" rel="stylesheet">
+		<link href="node_modules/@fortawesome/fontawesome-free/css/all.css" rel="stylesheet">
 		<link href="dash.css" rel="stylesheet">
 	</head>
 	<body>
-		<div id="stage"></div>
+		<div id="ysmrrbrrlarbrrrr" class="carousel slide" data-ride="carousel" data-interval="30000" data-pause="false">
+			<div id="stage" class="carousel-inner"></div>
+		</div>
 		
 		<div id="loading">
 			<h1>Loading...</h1>
+		</div>
+
+		<div id="controls">
+			<!-- Needs this Chrome plugin: https://chrome.google.com/webstore/detail/exit-kiosk/oickijkfojmeggjbbhajnpjapbkippen -->
+			<a class="btn btn-danger" href="#exitkiosk" role="button"><i class="fas fa-power-off"></i></a>
+			<button type="button" class="btn btn-secondary" onclick="$('#ysmrrbrrlarbrrrr').carousel('next')"><i class="fas fa-forward"></i></button>
+
+			<span class="control-splitter"></span>
+
+			<!--<button type="button" class="btn btn-secondary disabled"><i class="fas fa-power-off"></i></button>-->
 		</div>
 
 		<script src="node_modules/jquery/dist/jquery.js"></script>

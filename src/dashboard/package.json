@@ -1,6 +1,11 @@
 {
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.3",
     "bootstrap": "^4.6.0",
-    "chartist": "^0.11.4"
+    "chartist": "^0.11.4",
+    "http-server": "^0.12.3"
+  },
+  "scripts": {
+    "start": "./node_modules/.bin/http-server -a localhost -p 9000 -c-1"
   }
 }
