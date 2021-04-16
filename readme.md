@@ -3,9 +3,6 @@ Displays information about enrolled network devices. **Unfinished - do not use w
 
 ![2021-04-16-161649_480x800_scrot](https://user-images.githubusercontent.com/11209477/115046438-5962d400-9ecf-11eb-88ef-f7982495bb94.png)
 
-## Communicator
-Cross-platform low requirement Python API to report system information and current stats across the network.
-
 ## Dashboard
 A NodeJS web front-end dashboard designed for a vertically mounted Raspberry Pi display run in Chromium Kiosk mode.
 
@@ -18,6 +15,9 @@ sudo npm install -g npm@latest
 [Make sure this plugin is installed][kioskexit] on Chromium, otherwise it will not exit Kiosk mode when selecting the close button.
 
 And start by running `start.sh` inside the dashboard directory.
+
+## Communicator
+Cross-platform low requirement Python API to report system information and current stats across the network.
 
 ## Development
 Start off by running `dev.sh`, which will install dependencies for both Python API and Dashboard projects.
