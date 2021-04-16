@@ -144,8 +144,12 @@ function update() {
 
 					chart = document.getElementsByClassName('a' + index + 'chart')[0];
 					chart.__chartist__.update({'series': data[index].series});
+					document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.add('hide');
 				})
-				.catch(err => console.log(err));
+				.catch(err => {
+					console.log(err);
+					document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.remove('hide');
+				});
 		} else if ( obj.type == "timedate" ) {
 			var dt = new Date();
 			document.getElementById(index + 'time').innerHTML = dt.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit', hour12: true});
