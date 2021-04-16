@@ -14,7 +14,7 @@ var data = []; // Populated with collected data from participants.
  * Initialises the stage.
  */
 function init() {
-	document.getElementById('loading').style.display = null;
+	document.getElementById('loading').classList.remove('d-none');
 	document.getElementById('stage').innerHTML = '';
 	for (let index = 0; index < endpoints.views.length; index++) {
 		var first = ( index == 0 ) ? true : false;
@@ -34,7 +34,7 @@ function init() {
 			continue;
 		}
 	}
-	document.getElementById('loading').style.display = 'none';
+	document.getElementById('loading').classList.add('d-none');
 }
 
 /**
@@ -144,11 +144,11 @@ function update() {
 
 					chart = document.getElementsByClassName('a' + index + 'chart')[0];
 					chart.__chartist__.update({'series': data[index].series});
-					document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.add('hide');
+					document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.add('d-none');
 				})
 				.catch(err => {
 					console.log(err);
-					document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.remove('hide');
+					document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.remove('d-none');
 				});
 		} else if ( obj.type == "timedate" ) {
 			var dt = new Date();
