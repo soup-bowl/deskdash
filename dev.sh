@@ -7,6 +7,7 @@ pip3 install virtualenv
 python3 -m venv pythonenv
 source pythonenv/bin/activate
 pythonenv/bin/pip3 install -r requirements.txt
+( cd src/communicator && cp -n config.json.example config.json )
 
 ( cd src/dashboard && npm install && cp -n config.json.example config.json )
 
