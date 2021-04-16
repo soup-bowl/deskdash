@@ -19,7 +19,9 @@ function init() {
 	for (let index = 0; index < endpoints.views.length; index++) {
 		var first = ( index == 0 ) ? true : false;
 		if ( endpoints.views[index].type == "communicator" ) {
-			fetch(endpoints.views[index].endpoint)
+			auth  = (endpoints.views[index].key !== undefined) ? "?key=" + endpoints.views[index].key : "";
+			query = endpoints.views[index].endpoint + auth;
+			fetch(query)
 				.then(response => response.json())
 				.then(json => {
 					load_segment('communicator', index, endpoints.views[index], first, function() { load_new_communicator(index, json); });
@@ -111,7 +113,8 @@ function update() {
 	for (let index = 0; index < endpoints.views.length; index++) {
 		var obj = endpoints.views[index];
 		if ( obj.type == "communicator" ) {
-			fetch(obj.endpoint)
+			auth  = (obj.key !== undefined) ? "?key=" + obj.key : "";
+			fetch(obj.endpoint + auth)
 				.then(response => response.json())
 				.then(json => {
 					stat = json['content'];

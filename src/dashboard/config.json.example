@@ -8,6 +8,7 @@
 		{
 			"type": "communicator",
 			"endpoint": "http://localhost:43594/",
+			"key": "anyacceptablecharacterswilldo",
 			"background": "#210000"
 		}
 	]
