@@ -7,6 +7,7 @@
 
 var endpoints; // Loaded with configuration data from config.json, called at the bottom of this file.
 var data = []; // Populated with collected data from participants.
+var activeStage = 0;
 
 // --- Initalisation segment ---
 
@@ -164,6 +165,42 @@ function update() {
 }
 
 /**
+ * Sets additional buttons commanded by the stage.
+ *
+ * @param {int}  id          Stage ID that's currently on-screen.
+ * @param {bool} canShutdown Can the stage shut down the host?
+ */
+function set_stage_buttons(id, canShutdown = false) {
+	stageBtns = document.getElementById("stageButtons");
+	btnHtml   = '';
+
+	if (canShutdown) {
+		btnHtml += "<button type=\"button\" class=\"btn btn-secondary\" onclick=\"execute_shutdown(" + id + ")\"><i class=\"fas fa-power-off\"></i></button>";
+	}
+
+	stageBtns.innerHTML = btnHtml;
+}
+
+/**
+ * Fires off a shutdown pulse command.
+ * @param {int} id ID. 
+ * @returns
+ */
+function execute_shutdown(id) {
+	canShutdown = (typeof endpoints.views[id].permitShutdown !== 'undefined') ? endpoints.views[id].permitShutdown : false;
+	if (canShutdown) {
+		auth  = (endpoints.views[id].key !== undefined) ? "?key=" + endpoints.views[id].key : "";
+		query = endpoints.views[id].endpoint + auth + "&cmd=shutdown";
+		fetch(query)
+			.then(response => response.json())
+			.then(json => {return true;})
+			.catch(err => {return false;});
+	} else {
+		return false;
+	}
+}
+
+/**
  * Sets the colour of the badges based upon their numerical input. Green for low, yellow for above 60C, and red for 80C.
  * @param {int} obj    The object we're adding the CSS classes too.
  * @param {int} number The temperature in celcius.
@@ -210,6 +247,13 @@ window.onload = function() {
 			var updateLoop = window.setInterval(function(){
 				update();
 			}, 5000);
+
+			// TODO - Replace with Native JS. In fact replace Bootstrap Carousel, it's always fighting me...
+			$('#ysmrrbrrlarbrrrr').on('slide.bs.carousel', function (slide) {
+				activeStage = slide.relatedTarget.id.slice(-1);
+				canShutdown = (typeof endpoints.views[activeStage].permitShutdown !== 'undefined') ? endpoints.views[activeStage].permitShutdown : false;
+				set_stage_buttons(activeStage, canShutdown);
+			})
 		})
 		.catch(err => console.log(err));
 };
