@@ -6,4 +6,9 @@ services:
         dockerfile: .docker/communicator.dockerfile
     ports:
         - 43594:43594
-    
+  dashboard:
+    build:
+      context: .
+      dockerfile: .docker/dashboard.dockerfile
+    ports:
+      - 9000:9000
