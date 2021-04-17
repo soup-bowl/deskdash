@@ -1,4 +1,5 @@
 {
 	"auth": false,
-	"key": "anyacceptablecharacterswilldo"
+	"key": "anyacceptablecharacterswilldo",
+	"permitShutdown": false
 }
