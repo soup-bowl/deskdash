@@ -40,7 +40,8 @@ body {
     padding: 5px;
 }
 
-#controls button {
+#controls button,
+#controls a {
 	margin-right: 5px;
 }
 
