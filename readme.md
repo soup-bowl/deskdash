@@ -20,6 +20,8 @@ And start by running `start.sh` inside the dashboard directory.
 Cross-platform low requirement Python API to report system information and current stats across the network.
 
 ## Development
+For convinience, a `docker-compose.yml` file is provided which will create an API and Dashboard bound to their respective ports. This will not work for 'production' use as the API container can only see the API released by the container filesystem, which is not a true account. The dashboard is fine and will likely be released as a container later on.
+
 Start off by running `dev.sh`, which will install dependencies for both Python API and Dashboard projects.
 
 For communicator:
