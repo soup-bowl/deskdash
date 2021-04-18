@@ -1,3 +1,3 @@
-from src.communicator.stats import Stats
+from src.communicator.network import Network
 
-Stats().get()
+Network().get_all()

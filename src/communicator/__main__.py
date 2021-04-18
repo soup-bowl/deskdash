@@ -3,6 +3,7 @@ from shutil import Error
 from urllib.parse import urlparse, parse_qs
 from communicator.stats import Stats
 from communicator.actions import Actions
+from communicator.network import Network
 import json
 import time
 import sys, os
@@ -14,23 +15,33 @@ class Server(BaseHTTPRequestHandler):
 	def do_GET(self):
 		input_key = parse_qs( urlparse(self.path).query).get('key', None)
 		input_cmd = parse_qs( urlparse(self.path).query).get('cmd', None)
+		input_cmd = parse_qs( urlparse(self.path).query).get('networkscan', None)
 
 		currentdir = os.path.split(os.path.abspath(__file__))[0]
-		use_key = False
-		key     = ''
-		a_shdwn = False
+		use_key  = False
+		key      = ''
+		a_shdwn  = False
+		use_scan = False
 		try:
 			with open(currentdir + "/config.json") as json_file:
 				data = json.load(json_file)
-				use_key = data['auth'] if 'auth' in data else False
-				key     = data['key'] if 'key' in data else ''
-				a_shdwn = data['permitShutdown'] if 'permitShutdown' in data else False
+
+				use_key  = data['auth'] if 'auth' in data else False
+				key      = data['key'] if 'key' in data else ''
+				a_shdwn  = data['permitShutdown'] if 'permitShutdown' in data else False
+				use_scan = data['permitNetscan'] if 'permitNetscan' in data else False
 
 		except FileNotFoundError:
 			pass
 
 		if use_key == False or ( use_key == True and ( input_key != None and input_key[0] == key ) ):
-			if ( a_shdwn == True and input_cmd != None and input_cmd[0] != None ):
+			if use_scan == True and input_cmd != None:
+				all_devices = Network().get_all()
+				self.fire_response(200, {
+					'success': True,
+					'content': all_devices
+				})
+			elif ( a_shdwn == True and input_cmd != None and input_cmd[0] != None ):
 				try:
 					Actions(input_cmd[0])
 
