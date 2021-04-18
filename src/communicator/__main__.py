@@ -22,9 +22,9 @@ class Server(BaseHTTPRequestHandler):
 		try:
 			with open(currentdir + "/config.json") as json_file:
 				data = json.load(json_file)
-				use_key = data['auth']
-				key     = data['key']
-				a_shdwn = data['permitShutdown']
+				use_key = data['auth'] if 'auth' in data else False
+				key     = data['key'] if 'key' in data else ''
+				a_shdwn = data['permitShutdown'] if 'permitShutdown' in data else False
 
 		except FileNotFoundError:
 			pass
