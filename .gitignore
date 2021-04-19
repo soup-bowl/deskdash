@@ -3,6 +3,7 @@
 __pycache__/
 pythonenv/
 src/communicator/config.json
+netmem.json
 
 # HTML/JS bits.
 node_modules/
