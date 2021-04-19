@@ -6,7 +6,14 @@ import psutil
 import platform
 
 class Stats(object):
+	"""Handles retrieval of various aspects of system data, from information to sensor outputs.
+	"""
 	def get(self):
+		"""Collates all system sensor and usage information from across the system.
+
+		Returns:
+			dict: Key of system aspect, and various/mixed parameters depending on information collected.
+		"""
 		return {
 			'system': self.get_system_information(),
 			'cpu': self.get_cpu_stats(),
@@ -18,6 +25,11 @@ class Stats(object):
 		}
 	
 	def get_system_information(self):
+		"""Gets general system information.
+
+		Returns:
+			dict: System information.
+		"""
 		sys = platform.uname()
 		return {
 			'hostname': sys.node,
@@ -29,6 +41,11 @@ class Stats(object):
 		}
 
 	def get_gpu_stats(self):
+		"""If an Nvidia GPU (nvidia-smi) is detected, grabs usage and temperature data from the GPU.
+
+		Returns:
+			dict: 'available' to dictate collection success, accompanied with the information if present.
+		"""
 		if which('nvidia-smi') is None:
 			return {'available': False}
 		
@@ -53,6 +70,11 @@ class Stats(object):
 		}
 	
 	def get_cpu_stats(self):
+		"""Gets processor utilisation.
+
+		Returns:
+			dict: Availability and percentage used as a whole.
+		"""
 		cpu_usage = psutil.cpu_percent(0, False)
 
 		return {
@@ -61,6 +83,11 @@ class Stats(object):
 		}
 	
 	def get_ram_stats(self):
+		"""Gets memory utilisation.
+
+		Returns:
+			dict: Usage of RAM for both real and swap/page.
+		"""
 		ram_usage  = psutil.virtual_memory().percent
 		page_usage = psutil.swap_memory().percent
 
@@ -71,6 +98,11 @@ class Stats(object):
 		}
 
 	def get_storage_stats(self):
+		"""Gets disk usage.
+
+		Returns:
+			dict: Disk usage.
+		"""
 		disks = []
 		for x in range(1):
 			partition_info  = psutil.disk_usage('/')
@@ -90,6 +122,11 @@ class Stats(object):
 		}
 
 	def get_battery_stats(self):
+		"""Gets battery usage, if the source computer is battery powered.
+
+		Returns:
+			dict: 'available' will dictate success, and data accompanied if available.
+		"""
 		try:
 			battery = psutil.sensors_battery()
 			return {
@@ -101,6 +138,11 @@ class Stats(object):
 			return {'available': False}
 
 	def get_temperatures(self):
+		"""Gets generic system temperatures, where available.
+
+		Returns:
+			dict: System temps.
+		"""
 		try:
 			temps = psutil.sensors_temperatures()
 		except AttributeError:
