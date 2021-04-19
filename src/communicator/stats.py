@@ -88,13 +88,15 @@ class Stats(object):
 		Returns:
 			dict: Usage of RAM for both real and swap/page.
 		"""
-		ram_usage  = psutil.virtual_memory().percent
-		page_usage = psutil.swap_memory().percent
+		ram_usage  = psutil.virtual_memory()
+		page_usage = psutil.swap_memory()
 
 		return {
 			'available': True,
-			'real_memory_usage': ram_usage,
-			'swap_memory_usage': page_usage
+			'real_memory_size': ram_usage.total,
+			'real_memory_usage': ram_usage.percent,
+			'swap_memory_size': page_usage.total,
+			'swap_memory_usage': page_usage.percent
 		}
 
 	def get_storage_stats(self):
