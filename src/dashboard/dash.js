@@ -32,6 +32,8 @@ function init() {
 			load_segment('timedate', index, endpoints.views[index], first, null);
 		} else if ( endpoints.views[index].type == "helloworld" ) {
 			load_segment('helloworld', index, endpoints.views[index], first, null);
+		} else if( endpoints.views[index].type == "netscan" ) {
+			load_segment('netscan', index, endpoints.views[index], first, null);
 		} else {
 			console.log("Invalid type: " + endpoints.views[index].type);
 			continue;
@@ -154,6 +156,22 @@ function update() {
 					console.log(err);
 					document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.remove('d-none');
 				});
+		} else if ( obj.type == "netscan" ) {
+			auth  = (obj.key !== undefined) ? "?key=" + obj.key : "";
+			fetch(obj.endpoint + auth + "&networkscan=yes")
+				.then(response => response.json())
+				.then(json => {
+					if (json['success'] == false) {
+						return null;
+					}
+
+					holder = document.getElementById(index+"netlist");
+					holder.innerHTML = "";
+					for (x in json.content) {
+						content = json.content[x];
+						holder.insertAdjacentHTML('beforeend', "<li id=\"\" class=\"list-group-item\">" + content.hostname + "</li>");
+					}
+				});
 		} else if ( obj.type == "timedate" ) {
 			var dt = new Date();
 			document.getElementById(index + 'time').innerHTML = dt.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit', hour12: true});
@@ -233,6 +251,18 @@ async function file_get_contents(uri, callback) {
     let res = await fetch(uri),
         ret = await res.text(); 
     return callback ? callback(ret) : ret;
+}
+
+/**
+ * Restarts the carousel.
+ */
+function restart_carousel() {
+	sliders = document.getElementById("stage").getElementsByTagName("div");
+	for (var i = 0; i < sliders.length; i += 1) {
+		sliders[i].classList.remove("active");
+	}
+
+	document.getElementById("e0").classList.add("active");
 }
 
 // --- Init ---

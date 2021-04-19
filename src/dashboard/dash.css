@@ -65,7 +65,11 @@ body {
 /* ! main stage config */
 
 /* segment-wide */
-
+.segment-communicator .list-group-item,
+.segment-netscan .list-group-item  {
+	background-color: inherit;
+	border: 1px solid rgb(193 193 193 / 13%);
+}
 /* ! segment-wide */
 
 /* timedate-specific */
@@ -98,11 +102,6 @@ body {
 
 .segment-communicator .splitter {
 	margin: 0 5px 0 5px;
-}
-
-.segment-communicator .list-group-item {
-	background-color: inherit;
-	border: 1px solid rgb(193 193 193 / 13%);
 }
 
 .segment-communicator .list-processor {
