@@ -104,6 +104,10 @@ body {
 	margin: 0 5px 0 5px;
 }
 
+.segment-communicator .list-group-item {
+	border-left-width: 2px;
+}
+
 .segment-communicator .list-processor {
 	border-left-color: #ff3434;
 }
