@@ -15,7 +15,7 @@ class Server(BaseHTTPRequestHandler):
 	def do_GET(self):
 		input_key = parse_qs( urlparse(self.path).query).get('key', None)
 		input_cmd = parse_qs( urlparse(self.path).query).get('cmd', None)
-		input_cmd = parse_qs( urlparse(self.path).query).get('networkscan', None)
+		input_net = parse_qs( urlparse(self.path).query).get('networkscan', None)
 
 		currentdir = os.path.split(os.path.abspath(__file__))[0]
 		use_key  = False
@@ -35,7 +35,7 @@ class Server(BaseHTTPRequestHandler):
 			pass
 
 		if use_key == False or ( use_key == True and ( input_key != None and input_key[0] == key ) ):
-			if use_scan == True and input_cmd != None:
+			if use_scan == True and input_net != None:
 				all_devices = Network().get_all()
 				self.fire_response(200, {
 					'success': True,
