@@ -53,6 +53,8 @@ class Stats(object):
 		response = subprocess.check_output(command)
 		gpu      = xml.etree.ElementTree.fromstring(response).find("gpu")
 
+		gpu_name = gpu.find("product_name").text
+		
 		gpu_temp     = gpu.find("temperature")
 		gpu_temp_now = int(gpu_temp.find("gpu_temp").text.rpartition('C')[0])
 		gpu_temp_max = int(gpu_temp.find("gpu_temp_max_threshold").text.rpartition('C')[0])
@@ -63,6 +65,7 @@ class Stats(object):
 
 		return {
 			'available': True,
+			'gpu_name': gpu_name,
 			'gpu_usage': gpu_usage,
 			'gpu_memory_usage': gpu_m_usage,
 			'gpu_temp_now': gpu_temp_now, 
