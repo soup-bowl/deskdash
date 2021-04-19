@@ -97,6 +97,7 @@ function update() {
 
 					if (stat['ram']['available']) {
 						mem = stat['ram'];
+						document.getElementById(index + 'memoryName').innerHTML = humanize_size(mem['real_memory_size']) + ' RAM';
 						document.getElementById(index + 'memoryUsage').innerHTML = 'Usage: ' + mem['real_memory_usage'] + '%';
 						document.getElementById(index + 'swapUsage').innerHTML = 'Swap: ' + mem['swap_memory_usage'] + '%';
 
@@ -108,6 +109,7 @@ function update() {
 						gpumon.style.display = null;
 
 						gpu = stat['gpu'];
+						document.getElementById(index + 'graphicName').innerHTML = gpu['gpu_name'];
 						document.getElementById(index + 'graphicUsage').innerHTML = 'Usage: ' + gpu['gpu_usage'] + '%';
 
 						data[index].series[2].push(gpu['gpu_usage']); if ( data[index].series[2].length > 10 ) { data[index].series[2].shift(); }
@@ -225,6 +227,26 @@ function set_temp_badge(obj, number) {
 		obj.classList.remove('badge-danger');
 		obj.classList.add('badge-success');
 	}
+}
+
+/**
+ * Converts a raw string of bytes into a prettified unit with counterpart idnciator.
+ * 
+ * @param {int} raw_bits Measurement in bytes.
+ * @returns {string} Pretty measurement with unit.
+ */
+function humanize_size(raw_bits) {
+	units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+	steps = 0;
+	conversion = raw_bits;
+	
+	while (conversion > 1024) {
+		conversion = conversion / 1024;
+		steps++;
+	}
+
+	conversion = Math.round(conversion);
+	return `${conversion} ${units[steps]}`;
 }
 
 /**
