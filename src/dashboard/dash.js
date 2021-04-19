@@ -155,10 +155,24 @@ function update() {
 						return null;
 					}
 
+					if (data[index] === undefined) {
+						data[index] = json.content;
+					}
+
+					for (i = 1; i < 255; i++) {
+						if (json.content[i] === undefined && data[index][i] === undefined) {
+							continue;
+						} else if (json.content[i].status === "up" && data[index][i] === undefined) {
+							data[index].network[i] = json.content[i];
+						}  else if (json.content[i].status === undefined && typeof data[index][i] === String) {
+							data[index].network[i].status = "down";
+						}
+					}
+
 					holder = document.getElementById(index+"netlist");
 					holder.innerHTML = "";
-					for (x in json.content) {
-						content = json.content[x];
+					for (x in data[index]) {
+						content = data[index][x];
 						holder.insertAdjacentHTML('beforeend', "<li id=\"\" class=\"list-group-item\">" + content.hostname + "</li>");
 					}
 				});
