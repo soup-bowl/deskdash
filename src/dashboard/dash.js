@@ -14,32 +14,37 @@ var activeStage = 0;
 /**
  * Initialises the stage.
  */
-function init() {
+async function init() {
 	document.getElementById('loading').classList.remove('d-none');
 	document.getElementById('stage').innerHTML = '';
+	
 	for (let index = 0; index < endpoints.views.length; index++) {
-		var first = ( index == 0 ) ? true : false;
+		settings = endpoints.views[index];
+		bgcolor    = (settings.background !== null) ? "background-color:" + settings.background + ";" : "";
+		bgimagecss = (settings.randomBackground || typeof settings.backgroundUrl === 'string') ? " bgimage" : "";
+		bgimg      = (typeof settings.backgroundUrl === 'string') ? "background-image: url('" + settings.backgroundUrl + "');" : "";
+		bgimgauto  = (settings.randomBackground) ? "background-image: url('https://source.unsplash.com/daily');" : "";
+
+		container = "<div id=\"e" + index + "\" class=\"carousel-item roulette-item " + bgimagecss + "\" style=\"" + bgcolor + bgimg + bgimgauto + "\"></div>";
+		document.getElementById("stage").insertAdjacentHTML('beforeend', container);
+	}
+	
+	for (let index = 0; index < endpoints.views.length; index++) {
 		if ( endpoints.views[index].type == "communicator" ) {
-			auth  = (endpoints.views[index].key !== undefined) ? "?key=" + endpoints.views[index].key : "";
-			query = endpoints.views[index].endpoint + auth;
-			fetch(query)
-				.then(response => response.json())
-				.then(json => {
-					load_segment('communicator', index, endpoints.views[index], first, function() { load_new_communicator(index, json); });
-				})
-				.catch(err => console.log(err));
+			await load_segment('communicator', index, endpoints.views[index], null);
 		} else if ( endpoints.views[index].type == "timedate" ) {
-			load_segment('timedate', index, endpoints.views[index], first, null);
+			await load_segment('timedate', index, endpoints.views[index], null);
 		} else if ( endpoints.views[index].type == "helloworld" ) {
-			load_segment('helloworld', index, endpoints.views[index], first, null);
+			await load_segment('helloworld', index, endpoints.views[index], null);
 		} else if( endpoints.views[index].type == "netscan" ) {
-			load_segment('netscan', index, endpoints.views[index], first, null);
+			await load_segment('netscan', index, endpoints.views[index], null);
 		} else {
 			console.log("Invalid type: " + endpoints.views[index].type);
 			continue;
 		}
 	}
 	document.getElementById('loading').classList.add('d-none');
+	document.getElementById('e0').classList.add('active');
 }
 
 /**
@@ -47,63 +52,15 @@ function init() {
  *
  * @param {string}   segment         Name of a HTML file in segments folder. Just the filename, no extension.
  * @param {int}      identifier      Number of the loop. Must not have been already used.
- * @param {*}        settings        The segment-specific portion of the config file.
- * @param {bool}     [first=false]   If this is the first in the loop (will add carousel start code).
- * @param {callback} [callback=null] If provided, this function will be called after the file is loaded.
  */
-function load_segment(segment, identifier, settings, first = false, callback = null) {
-	activebit  = (first) ? "carousel-item active" : "carousel-item";
-	bgcolor    = (settings.background !== null) ? "background-color:" + settings.background + ";" : "";
-	bgimagecss = (settings.randomBackground || typeof settings.backgroundUrl === 'string') ? " bgimage" : "";
-	bgimg      = (typeof settings.backgroundUrl === 'string') ? "background-image: url('" + settings.backgroundUrl + "');" : "";
-	bgimgauto  = (settings.randomBackground) ? "background-image: url('https://source.unsplash.com/daily');" : "";
+function load_segment(segment, identifier) {
+	return new Promise(resolve => {
+		file_get_contents("segments/" + segment + ".html").then(page => {
+			rechanged = page.replaceAll('{{CHANGE}}', identifier);
+			document.getElementById("e"+identifier).innerHTML = rechanged;
+		});
 
-	file_get_contents("segments/" + segment + ".html").then(page => {
-		before = "<div id=\"e" + identifier + "\" class=\"" + activebit + " roulette-item " + bgimagecss + "\" style=\"" + bgcolor + bgimg + bgimgauto + "\">";
-		after = "</div>";
-
-		rechanged = before + page.replaceAll('{{CHANGE}}', identifier).replaceAll('{{COLOR}}', settings.background) + after;
-		document.getElementById("stage").insertAdjacentHTML('beforeend', rechanged);
-
-		typeof callback === 'function' && callback();
-	});
-}
-
-/**
- * Loads communicator-related settings and configurations.
- *
- * @param {int}    id             Identifier on the stage. 
- * @param {string} json           JSON API response from the source API. 
- * @param {string} [splitter='•'] Used in the subheading to split-up data segments.
- */
-function load_new_communicator(id, json, splitter = '•') {
-	splitter = "<span class=\"splitter\">" + splitter + "</span>";
-	var segment = document.getElementById("e" + id);
-	data[id] = {'series': [ [], [] ]};
-	
-	syst = json['content']['system'];
-	document.getElementById(id + 'machine').innerHTML = syst['hostname'];
-	document.getElementById(id + 'spec').innerHTML = syst['operating_system'] + splitter + syst['release'] + splitter + syst['processor'];
-
-	if (json['content']['gpu']['available']) {
-		var gpumon = document.getElementById(id + 'graphicSegment');
-		data[id].series.push([]);
-		gpumon.style.display = null;
-	}
-
-	new Chartist.Line('.a'+ id + 'chart', {
-		labels: [],
-		series: [ [], [], [] ],
-	}, {
-		fullWidth: true,
-		chartPadding: { right: 40 },
-		height: 200,
-		axisY: {
-			high: 100
-		},
-		axisX: {
-			showGrid: false
-		}
+		resolve();
 	});
 }
 
@@ -121,6 +78,15 @@ function update() {
 				.then(response => response.json())
 				.then(json => {
 					stat = json['content'];
+					
+					if (data[index] === undefined) {
+						data[index] = {'series': [ [], [] ]};
+						if (stat['gpu']['available']) {
+							data[index].series.push([]);
+						}
+					}
+
+					document.getElementById(index + 'machine').innerHTML = stat['system']['hostname'];
 
 					if (stat['cpu']['available']) {
 						cpu = stat['cpu'];
@@ -137,7 +103,10 @@ function update() {
 						data[index].series[1].push(mem['real_memory_usage']); if ( data[index].series[1].length > 10 ) { data[index].series[1].shift(); }
 					}
 
+					var gpumon = document.getElementById(index + 'graphicSegment');
 					if (stat['gpu']['available']) {
+						gpumon.style.display = null;
+
 						gpu = stat['gpu'];
 						document.getElementById(index + 'graphicUsage').innerHTML = 'Usage: ' + gpu['gpu_usage'] + '%';
 
@@ -146,11 +115,30 @@ function update() {
 						gputmp = document.getElementById(index + 'graphicTemp');
 						gputmp.innerHTML = 'Temp ' + gpu['gpu_temp_now'] + '°C';
 						set_temp_badge(gputmp, gpu['gpu_temp_now']);
+					} else {
+						gpumon.style.display = 'none';
 					}
 
-					chart = document.getElementsByClassName('a' + index + 'chart')[0];
-					chart.__chartist__.update({'series': data[index].series});
-					document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.add('d-none');
+					chart = document.getElementsByClassName('a' + index + 'chart');
+					if(chart[0].__chartist__ === undefined) {
+						new Chartist.Line('.a'+ index + 'chart', {
+							labels: [],
+							series: [ [], [], [] ],
+						}, {
+							fullWidth: true,
+							chartPadding: { right: 40 },
+							height: 200,
+							axisY: {
+								high: 100
+							},
+							axisX: {
+								showGrid: false
+							}
+						});
+					} else {
+						chart[0].__chartist__.update({'series': data[index].series});
+						document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.add('d-none');
+					}
 				})
 				.catch(err => {
 					console.log(err);
