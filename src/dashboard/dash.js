@@ -162,10 +162,12 @@ function update() {
 					for (i = 1; i < 255; i++) {
 						if (json.content[i] === undefined && data[index][i] === undefined) {
 							continue;
-						} else if (json.content[i].status === "up" && data[index][i] === undefined) {
-							data[index].network[i] = json.content[i];
-						}  else if (json.content[i].status === undefined && typeof data[index][i] === String) {
-							data[index].network[i].status = "down";
+						} else if (json.content[i] === undefined && typeof data[index][i] === "object") {
+							data[index][i].status = "down";
+						} else if (json.content[i].status === "up" && (data[index][i] === undefined || (typeof data[index][i] === "object" && data[index][i].status === "down"))) {
+							data[index][i] = json.content[i];
+						} else {
+							continue;
 						}
 					}
 
@@ -173,7 +175,9 @@ function update() {
 					holder.innerHTML = "";
 					for (x in data[index]) {
 						content = data[index][x];
-						holder.insertAdjacentHTML('beforeend', "<li id=\"\" class=\"list-group-item\">" + content.hostname + "</li>");
+						button_col = (content.status === "up") ? 'badge-success' : 'badge-danger';
+						hostname = (content.hostname === content.ip) ? '<span class="text-muted">N/A</span>' : content.hostname;
+						holder.insertAdjacentHTML('beforeend', "<tr><td><span class=\"badge "+button_col+" badge-pill\">&nbsp;</span></td><td>"+hostname+"</td><td>"+content.ip+"</td></tr>");
 					}
 				});
 		} else if ( obj.type == "timedate" ) {
