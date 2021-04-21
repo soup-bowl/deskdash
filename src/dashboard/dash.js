@@ -176,8 +176,9 @@ function update() {
 					for (x in data[index]) {
 						content = data[index][x];
 						button_col = (content.status === "up") ? 'badge-success' : 'badge-danger';
+						button_lbl = (content.status === "up") ? 'up' : 'down';
 						hostname = (content.hostname === content.ip) ? '<span class="text-muted">N/A</span>' : content.hostname;
-						holder.insertAdjacentHTML('beforeend', "<tr><td><span class=\"badge "+button_col+" badge-pill\">&nbsp;</span></td><td>"+hostname+"</td><td>"+content.ip+"</td></tr>");
+						holder.insertAdjacentHTML('beforeend', "<tr><td><span class=\"badge "+button_col+" badge-pill\">"+button_lbl+"</span></td><td>"+hostname+"</td><td>"+content.ip+"</td></tr>");
 					}
 				});
 		} else if ( obj.type == "timedate" ) {
