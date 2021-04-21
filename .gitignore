@@ -1,10 +1,2 @@
-# Python bits.
-.pytest_cache/
-__pycache__/
-pythonenv/
-src/communicator/config.json
-netmem.json
-
-# HTML/JS bits.
 node_modules/
-src/dashboard/config.json
+config.json

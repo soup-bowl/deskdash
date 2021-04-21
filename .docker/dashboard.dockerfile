@@ -2,7 +2,7 @@ FROM node:latest
 
 WORKDIR /app
 
-COPY ./src/dashboard /app
+COPY . /app
 
 RUN rm -rf node_modules/ && npm install
 
