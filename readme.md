@@ -5,6 +5,16 @@ Displays information about enrolled network devices. **Unfinished - do not use w
 
 A NodeJS web front-end dashboard designed for a vertically mounted Raspberry Pi display run in Chromium Kiosk mode.
 
+## Quickstart with Docker
+
+If you wish to get going quickly, this project is available via **[Docker][docker]**. All you need to get up and running would be:
+
+```
+docker run -v "$PWD/config.json":/app/config.json -p 9000:9000/tcp soupbowl/deskdash:latest
+```
+
+## Native Start
+
 To run, we need npm to run us a local server for the Chromium instance to view, setup by running:
 
 ```
@@ -23,4 +33,5 @@ For quick spin-up, use the `docker-compose.yml` file to quickly setup a containe
 Otherwise, `npm install` to grab the node dependencies before continuing, and then run `npm start`. Accessible via http://localhost:9000.
 
 [comm]: https://github.com/soup-bowl/deskdash-communicator
+[docker]: https://hub.docker.com/r/soupbowl/deskdash
 [kioskexit]: https://chrome.google.com/webstore/detail/exit-kiosk/oickijkfojmeggjbbhajnpjapbkippen
