@@ -26,6 +26,9 @@ Adding the following to the end of your newly-available local copy (change the w
 
 `@lxterminal --working-directory=/home/pi/Companion -e npm start`
 
+## Hiding the cursor
+Move/tap the cursor to the bottom right corner as far in as you can go. There's a hitbox area which will hide the cursor. Move the cursor away from this area and it will re-appear. 
+
 [comm]: https://github.com/soup-bowl/deskdash-communicator
 [docker]: https://hub.docker.com/r/soupbowl/deskdash
 [ldir]: https://raspberrypi.stackexchange.com/a/102297
