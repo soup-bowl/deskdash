@@ -18,19 +18,24 @@ function createWindow () {
 		autoHideMenuBar: true
 	});
 
-	win.loadFile('index.html');
+	win.loadFile('dash.html');
 }
 
 // Start the Electron app, and create a window.
-app.whenReady().then(() => {
-	createWindow();
+if(fs.existsSync('config.json')) {
+	app.whenReady().then(() => {
+		createWindow();
 
-	app.on('activate', () => {
-		if (BrowserWindow.getAllWindows().length === 0) {
-			createWindow();
-		}
-	})
-});
+		app.on('activate', () => {
+			if (BrowserWindow.getAllWindows().length === 0) {
+				createWindow();
+			}
+		})
+	});
+} else {
+	console.log("No config.json file found. Please setup a configuration file before continuing.");
+	app.quit();
+}
 
 // If all the application windows are closed, terminate the application.
 app.on('window-all-closed', () => {
