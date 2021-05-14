@@ -5,7 +5,7 @@
  * @package deskdash
  */
 
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -22,8 +22,8 @@ function createWindow () {
 }
 
 // Start the Electron app, and create a window.
-if(fs.existsSync('config.json')) {
-	app.whenReady().then(() => {
+app.whenReady().then(() => {
+	if(fs.existsSync('config.json')) {
 		createWindow();
 
 		app.on('activate', () => {
@@ -31,11 +31,12 @@ if(fs.existsSync('config.json')) {
 				createWindow();
 			}
 		})
-	});
-} else {
-	console.log("No config.json file found. Please setup a configuration file before continuing.");
-	app.quit();
-}
+
+	} else {
+		dialog.showErrorBox('No configuration found', 'No config.json file found. Please setup a configuration file before continuing.');
+		app.quit();
+	}
+});
 
 // If all the application windows are closed, terminate the application.
 app.on('window-all-closed', () => {
