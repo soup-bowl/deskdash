@@ -17,5 +17,15 @@ npm start
 
 This heavily relies on the participant computers using the counterpart **[Communicator API][comm]** package.
 
+## Starting on GUI Startup (Raspberry Pi OS)
+I used the LXDE autostart for this. In my installation, I had no local Autostart and apparently [local *overrides* rather than compliments][ldir], so run this before continuing if yours doesn't exist too.
+
+`cp /etc/xdg/lxsession/LXDE-pi/autostart ~/.config/lxsession/LXDE-pi`
+
+Adding the following to the end of your newly-available local copy (change the working directory to match your setup):
+
+`@lxterminal --working-directory=/home/pi/Companion -e npm start`
+
 [comm]: https://github.com/soup-bowl/deskdash-communicator
 [docker]: https://hub.docker.com/r/soupbowl/deskdash
+[ldir]: https://raspberrypi.stackexchange.com/a/102297
