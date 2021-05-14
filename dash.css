@@ -62,6 +62,15 @@ body {
 	text-shadow: 0 0 20px #000;
 }
 
+.hide-cursor-area {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	cursor: none;
+	width: 2.5%;
+	height: 50px;
+}
+
 /* ! main stage config */
 
 /* segment-wide */
