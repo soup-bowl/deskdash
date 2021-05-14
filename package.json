@@ -1,11 +1,28 @@
 {
+  "name": "deskdash",
+  "description": "Displays information about enrolled network devices",
+  "version": "0.2.0",
+  "main": "main.js",
+  "devDependencies": {
+    "electron": "^12.0.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/soup-bowl/deskdash.git"
+  },
+  "author": "soup-bowl",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/soup-bowl/deskdash/issues"
+  },
+  "homepage": "https://github.com/soup-bowl/deskdash#readme",
+  "scripts": {
+    "start": "electron ."
+  },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.3",
     "bootstrap": "^4.6.0",
     "chartist": "^0.11.4",
     "http-server": "^0.12.3"
-  },
-  "scripts": {
-    "start": "./node_modules/.bin/http-server -p 9000 -c-1"
   }
 }
