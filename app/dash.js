@@ -261,6 +261,10 @@ function update() {
 						}
 
 						document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.add('d-none');
+					})
+					.catch(err => {
+						console.log(err);
+						document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.remove('d-none');
 					});
 			}	
 		} else {
