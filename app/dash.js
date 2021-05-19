@@ -215,8 +215,11 @@ function update() {
 			}*/
 
 			// Grab historical pricing data for each of our coins.
+			track_currency = (obj.currency === undefined) ? 'usd' : obj.currency;
+			track_days     = (obj.days === undefined) ? 1 : obj.days;
+			track_interval = (obj.interval === undefined) ? 'hourly' : obj.interval;
 			for (let i = 0; i < obj.track.length; i++) {
-				fetch('https://api.coingecko.com/api/v3/coins/' + obj.track[i] + '/market_chart?vs_currency=gbp&days=1&interval=hourly')
+				fetch('https://api.coingecko.com/api/v3/coins/' + obj.track[i] + '/market_chart?vs_currency=' + track_currency + '&days=' + track_days + '&interval=' + track_interval)
 					.then(response => response.json())
 					.then(json => {
 						var obj = endpoints.views[index];
@@ -243,6 +246,7 @@ function update() {
 						}
 
 						// No chart? Create one. If the chart exists, replace the data with the latest collection.
+						graph_height = (obj.graphHeights === undefined) ? '200' : obj.graphHeights;
 						chart = document.getElementsByClassName(idname);
 						if(chart[0].__chartist__ === undefined) {
 							new Chartist.Line('.' + idname, {
@@ -251,7 +255,7 @@ function update() {
 							}, {
 								fullWidth: true,
 								chartPadding: { right: 40 },
-								height: 200,
+								height: graph_height,
 								axisX: {
 									showGrid: false
 								}
