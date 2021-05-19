@@ -10,6 +10,12 @@
 			"endpoint": "http://localhost:43594/",
 			"key": "anyacceptablecharacterswilldo",
 			"background": "#210000"
+		},
+		{
+			"type": "crypto",
+			"track": ["bitcoin", "ethereum", "basic-attention-token"],
+			"titles": ["Bitcoin", "Etherium", "Basic Attention Token"],
+			"background": "#c74a00"
 		}
 	]
 }

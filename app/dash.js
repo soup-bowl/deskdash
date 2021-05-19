@@ -219,6 +219,8 @@ function update() {
 				fetch('https://api.coingecko.com/api/v3/coins/' + obj.track[i] + '/market_chart?vs_currency=gbp&days=1&interval=hourly')
 					.then(response => response.json())
 					.then(json => {
+						var obj = endpoints.views[index];
+
 						data[index].series[i] = [];
 						json['prices'].forEach(interval => {
 							data[index].series[i].push(interval[1]);
@@ -228,10 +230,15 @@ function update() {
 						coinbox = document.getElementById(idname);
 						if (!coinbox) {
 							area = document.getElementById(index + 'charts');
-							box  = document.createElement('div');
-							box.id        = idname;
-							box.className = idname + ' cryto-graph';
 
+							title = document.createElement('h2');
+							title.innerHTML = obj.titles[i];
+
+							box           = document.createElement('div');
+							box.id        = idname;
+							box.className = idname + ' cryto-graph ' + obj.track[i];
+
+							area.appendChild(title);
 							area.appendChild(box);
 						}
 
@@ -251,8 +258,9 @@ function update() {
 							});
 						} else {
 							chart[0].__chartist__.update({'series': [data[index].series[i]]});
-							//document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.add('d-none');
 						}
+
+						document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.add('d-none');
 					});
 			}	
 		} else {
