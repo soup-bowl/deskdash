@@ -171,3 +171,13 @@ body {
 	font-size: 4rem;
 }
 /* ! communicator-specific */
+
+/* Crypto-specific */
+.segment-crypto .cryto-graph {
+	background-color: rgb(0 0 0 / 50%);
+	border: 1px solid rgb(193 193 193 / 13%);
+	border-radius: 0.25rem;
+	padding: 20px;
+    margin-bottom: 20px;
+}
+/* ! Crypto-specific */

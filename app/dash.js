@@ -31,13 +31,15 @@ async function init() {
 	
 	for (let index = 0; index < endpoints.views.length; index++) {
 		if ( endpoints.views[index].type == "communicator" ) {
-			await load_segment('communicator', index, endpoints.views[index], null);
+			await load_segment('communicator', index);
 		} else if ( endpoints.views[index].type == "timedate" ) {
-			await load_segment('timedate', index, endpoints.views[index], null);
+			await load_segment('timedate', index);
 		} else if ( endpoints.views[index].type == "helloworld" ) {
-			await load_segment('helloworld', index, endpoints.views[index], null);
+			await load_segment('helloworld', index);
 		} else if( endpoints.views[index].type == "netscan" ) {
-			await load_segment('netscan', index, endpoints.views[index], null);
+			await load_segment('netscan', index);
+		} else if( endpoints.views[index].type == "crypto" ) {
+			await load_segment('crypto', index);
 		} else {
 			console.log("Invalid type: " + endpoints.views[index].type);
 			continue;
@@ -78,7 +80,8 @@ function update() {
 				.then(response => response.json())
 				.then(json => {
 					stat = json['content'];
-					
+
+					// If this is the start, create the slots in the data storage for our graph.
 					if (data[index] === undefined) {
 						data[index] = {'series': [ [], [] ]};
 						if (stat['gpu']['available']) {
@@ -86,8 +89,11 @@ function update() {
 						}
 					}
 
+					// Set the header to the name of the machine.
 					document.getElementById(index + 'machine').innerHTML = stat['system']['hostname'];
 
+					// Next segments check for the API containing the relevant HW outputs, then changes their table data.
+					// Each if also updates the table data with the latest output.
 					if (stat['cpu']['available']) {
 						cpu = stat['cpu'];
 						document.getElementById(index + 'processorUsage').innerHTML = 'Usage: ' + cpu['cpu_usage']  + '%';
@@ -121,6 +127,7 @@ function update() {
 						gpumon.style.display = 'none';
 					}
 
+					// No chart? Create one. If the chart exists, replace the data with the latest collection.
 					chart = document.getElementsByClassName('a' + index + 'chart');
 					if(chart[0].__chartist__ === undefined) {
 						new Chartist.Line('.a'+ index + 'chart', {
@@ -185,6 +192,72 @@ function update() {
 			var dt = new Date();
 			document.getElementById(index + 'time').innerHTML = dt.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit', hour12: true});
 			document.getElementById(index + 'date').innerHTML = dt.toLocaleDateString();
+		} else if ( obj.type == "crypto" ) {
+			// If this is the start, create the slots in the data storage for our graph.
+			if (data[index] === undefined) {
+				data[index] = {'series': [], 'trackids': []};
+				for (let i = 0; i < obj.track.length; i++) {
+					data[index].series.push([]);
+				}
+			}
+
+			// Check if the data array already knows the API identifiers for the track specificiations.
+			/*if (data[index].trackids === undefined || data[index].trackids.length === 0) {
+				fetch('https://api.coingecko.com/api/v3/coins/list')
+					.then(response => response.json())
+					.then(json => {
+						json.forEach(coin => {
+							if( coin['symbol'].match(obj.track) ) {
+								data[index].trackids.push(coin['id']);
+							}
+						});
+					});
+			}*/
+
+			// Grab historical pricing data for each of our coins.
+			for (let i = 0; i < obj.track.length; i++) {
+				fetch('https://api.coingecko.com/api/v3/coins/' + obj.track[i] + '/market_chart?vs_currency=gbp&days=1&interval=hourly')
+					.then(response => response.json())
+					.then(json => {
+						data[index].series[i] = [];
+						json['prices'].forEach(interval => {
+							data[index].series[i].push(interval[1]);
+						});
+
+						idname  = 'crypto' + index + 'point' + i;
+						coinbox = document.getElementById(idname);
+						if (!coinbox) {
+							area = document.getElementById(index + 'charts');
+							box  = document.createElement('div');
+							box.id        = idname;
+							box.className = idname + ' cryto-graph';
+
+							area.appendChild(box);
+						}
+
+						// No chart? Create one. If the chart exists, replace the data with the latest collection.
+						chart = document.getElementsByClassName(idname);
+						if(chart[0].__chartist__ === undefined) {
+							new Chartist.Line('.' + idname, {
+								labels: [],
+								series: [data[index].series[i]],
+							}, {
+								fullWidth: true,
+								chartPadding: { right: 40 },
+								height: 200,
+								axisY: {
+									high: 100
+								},
+								axisX: {
+									showGrid: false
+								}
+							});
+						} else {
+							chart[0].__chartist__.update({'series': [data[index].series[i]]});
+							//document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.add('d-none');
+						}
+					});
+			}	
 		} else {
 			continue;
 		}
@@ -292,6 +365,19 @@ function restart_carousel() {
 	}
 
 	document.getElementById("e0").classList.add("active");
+}
+
+/**
+ * Is the current index slide visible on-screen?
+ * @param {int} index Index of the slide.
+ * @returns {boolean} Boolean based on stage visibility.
+ */
+function is_visible(index) {
+	if ( index === activeStage ) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 // --- Init ---
