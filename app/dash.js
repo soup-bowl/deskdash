@@ -75,205 +75,235 @@ function update() {
 	for (let index = 0; index < endpoints.views.length; index++) {
 		var obj = endpoints.views[index];
 		if ( obj.type == "communicator" ) {
-			auth  = (obj.key !== undefined) ? "?key=" + obj.key : "";
-			fetch(obj.endpoint + auth)
-				.then(response => response.json())
-				.then(json => {
-					stat = json['content'];
-
-					// If this is the start, create the slots in the data storage for our graph.
-					if (data[index] === undefined) {
-						data[index] = {'series': [ [], [] ]};
-						if (stat['gpu']['available']) {
-							data[index].series.push([]);
-						}
-					}
-
-					// Set the header to the name of the machine.
-					document.getElementById(index + 'machine').innerHTML = stat['system']['hostname'];
-
-					// Next segments check for the API containing the relevant HW outputs, then changes their table data.
-					// Each if also updates the table data with the latest output.
-					if (stat['cpu']['available']) {
-						cpu = stat['cpu'];
-						document.getElementById(index + 'processorUsage').innerHTML = 'Usage: ' + cpu['cpu_usage']  + '%';
-
-						data[index].series[0].push(cpu['cpu_usage']); if ( data[index].series[0].length > 10 ) { data[index].series[0].shift(); }
-					}
-
-					if (stat['ram']['available']) {
-						mem = stat['ram'];
-						document.getElementById(index + 'memoryName').innerHTML = humanize_size(mem['real_memory_size']) + ' RAM';
-						document.getElementById(index + 'memoryUsage').innerHTML = 'Usage: ' + mem['real_memory_usage'] + '%';
-						document.getElementById(index + 'swapUsage').innerHTML = 'Swap: ' + mem['swap_memory_usage'] + '%';
-
-						data[index].series[1].push(mem['real_memory_usage']); if ( data[index].series[1].length > 10 ) { data[index].series[1].shift(); }
-					}
-
-					var gpumon = document.getElementById(index + 'graphicSegment');
-					if (stat['gpu']['available']) {
-						gpumon.style.display = null;
-
-						gpu = stat['gpu'];
-						document.getElementById(index + 'graphicName').innerHTML = gpu['gpu_name'];
-						document.getElementById(index + 'graphicUsage').innerHTML = 'Usage: ' + gpu['gpu_usage'] + '%';
-
-						data[index].series[2].push(gpu['gpu_usage']); if ( data[index].series[2].length > 10 ) { data[index].series[2].shift(); }
-
-						gputmp = document.getElementById(index + 'graphicTemp');
-						gputmp.innerHTML = 'Temp ' + gpu['gpu_temp_now'] + '°C';
-						set_temp_badge(gputmp, gpu['gpu_temp_now']);
-					} else {
-						gpumon.style.display = 'none';
-					}
-
-					// No chart? Create one. If the chart exists, replace the data with the latest collection.
-					chart = document.getElementsByClassName('a' + index + 'chart');
-					if(chart[0].__chartist__ === undefined) {
-						new Chartist.Line('.a'+ index + 'chart', {
-							labels: [],
-							series: [ [], [], [] ],
-						}, {
-							fullWidth: true,
-							chartPadding: { right: 40 },
-							height: 200,
-							axisY: {
-								high: 100
-							},
-							axisX: {
-								showGrid: false
-							}
-						});
-					} else {
-						chart[0].__chartist__.update({'series': data[index].series});
-						document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.add('d-none');
-					}
-				})
-				.catch(err => {
-					console.log(err);
-					document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.remove('d-none');
-				});
+			update_communicator(obj, index);
 		} else if ( obj.type == "netscan" ) {
-			auth  = (obj.key !== undefined) ? "?key=" + obj.key : "";
-			fetch(obj.endpoint + auth + "&networkscan=yes")
-				.then(response => response.json())
-				.then(json => {
-					if (json['success'] == false) {
-						return null;
-					}
-
-					if (data[index] === undefined) {
-						data[index] = json.content;
-					}
-
-					for (i = 1; i < 255; i++) {
-						if (json.content[i] === undefined && data[index][i] === undefined) {
-							continue;
-						} else if (json.content[i] === undefined && typeof data[index][i] === "object") {
-							data[index][i].status = "down";
-						} else if (json.content[i].status === "up" && (data[index][i] === undefined || (typeof data[index][i] === "object" && data[index][i].status === "down"))) {
-							data[index][i] = json.content[i];
-						} else {
-							continue;
-						}
-					}
-
-					holder = document.getElementById(index+"netlist");
-					holder.innerHTML = "";
-					for (x in data[index]) {
-						content = data[index][x];
-						button_col = (content.status === "up") ? 'badge-success' : 'badge-danger';
-						button_lbl = (content.status === "up") ? 'up' : 'down';
-						hostname = (content.hostname === content.ip) ? '<span class="text-muted">N/A</span>' : content.hostname;
-						holder.insertAdjacentHTML('beforeend', "<tr><td><span class=\"badge "+button_col+" badge-pill\">"+button_lbl+"</span></td><td>"+hostname+"</td><td>"+content.ip+"</td></tr>");
-					}
-				});
+			update_netscan(obj, index);
 		} else if ( obj.type == "timedate" ) {
 			var dt = new Date();
 			document.getElementById(index + 'time').innerHTML = dt.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit', hour12: true});
 			document.getElementById(index + 'date').innerHTML = dt.toLocaleDateString();
 		} else if ( obj.type == "crypto" ) {
+			update_crypto(obj, index);
+		} else {
+			continue;
+		}
+	}
+}
+
+/**
+ * Updates the communicator segment with data harvested from the Communicator Python API.
+ *
+ * @param {object} obj   The subset of the main configuration file relating to this entity.
+ * @param {int}    index The numerical indicator of the stage part.
+ */
+function update_communicator(obj, index) {
+	auth  = (obj.key !== undefined) ? "?key=" + obj.key : "";
+	fetch(obj.endpoint + auth)
+		.then(response => response.json())
+		.then(json => {
+			stat = json['content'];
+
 			// If this is the start, create the slots in the data storage for our graph.
 			if (data[index] === undefined) {
-				data[index] = {'series': [], 'trackids': []};
-				for (let i = 0; i < obj.track.length; i++) {
+				data[index] = {'series': [ [], [] ]};
+				if (stat['gpu']['available']) {
 					data[index].series.push([]);
 				}
 			}
 
-			// Check if the data array already knows the API identifiers for the track specificiations.
-			/*if (data[index].trackids === undefined || data[index].trackids.length === 0) {
-				fetch('https://api.coingecko.com/api/v3/coins/list')
-					.then(response => response.json())
-					.then(json => {
-						json.forEach(coin => {
-							if( coin['symbol'].match(obj.track) ) {
-								data[index].trackids.push(coin['id']);
-							}
-						});
-					});
-			}*/
+			// Set the header to the name of the machine.
+			document.getElementById(index + 'machine').innerHTML = stat['system']['hostname'];
 
-			// Grab historical pricing data for each of our coins.
-			track_currency = (obj.currency === undefined) ? 'usd' : obj.currency;
-			track_days     = (obj.days === undefined) ? 1 : obj.days;
-			track_interval = (obj.interval === undefined) ? 'hourly' : obj.interval;
-			for (let i = 0; i < obj.track.length; i++) {
-				fetch('https://api.coingecko.com/api/v3/coins/' + obj.track[i] + '/market_chart?vs_currency=' + track_currency + '&days=' + track_days + '&interval=' + track_interval)
-					.then(response => response.json())
-					.then(json => {
-						var obj = endpoints.views[index];
+			// Next segments check for the API containing the relevant HW outputs, then changes their table data.
+			// Each if also updates the table data with the latest output.
+			if (stat['cpu']['available']) {
+				cpu = stat['cpu'];
+				document.getElementById(index + 'processorUsage').innerHTML = 'Usage: ' + cpu['cpu_usage']  + '%';
 
-						data[index].series[i] = [];
-						json['prices'].forEach(interval => {
-							data[index].series[i].push(interval[1]);
-						});
+				data[index].series[0].push(cpu['cpu_usage']); if ( data[index].series[0].length > 10 ) { data[index].series[0].shift(); }
+			}
 
-						idname  = 'crypto' + index + 'point' + i;
-						coinbox = document.getElementById(idname);
-						if (!coinbox) {
-							area = document.getElementById(index + 'charts');
+			if (stat['ram']['available']) {
+				mem = stat['ram'];
+				document.getElementById(index + 'memoryName').innerHTML = humanize_size(mem['real_memory_size']) + ' RAM';
+				document.getElementById(index + 'memoryUsage').innerHTML = 'Usage: ' + mem['real_memory_usage'] + '%';
+				document.getElementById(index + 'swapUsage').innerHTML = 'Swap: ' + mem['swap_memory_usage'] + '%';
 
-							title = document.createElement('h2');
-							title.innerHTML = obj.titles[i];
+				data[index].series[1].push(mem['real_memory_usage']); if ( data[index].series[1].length > 10 ) { data[index].series[1].shift(); }
+			}
 
-							box           = document.createElement('div');
-							box.id        = idname;
-							box.className = idname + ' cryto-graph ' + obj.track[i];
+			var gpumon = document.getElementById(index + 'graphicSegment');
+			if (stat['gpu']['available']) {
+				gpumon.style.display = null;
 
-							area.appendChild(title);
-							area.appendChild(box);
-						}
+				gpu = stat['gpu'];
+				document.getElementById(index + 'graphicName').innerHTML = gpu['gpu_name'];
+				document.getElementById(index + 'graphicUsage').innerHTML = 'Usage: ' + gpu['gpu_usage'] + '%';
 
-						// No chart? Create one. If the chart exists, replace the data with the latest collection.
-						graph_height = (obj.graphHeights === undefined) ? '200' : obj.graphHeights;
-						chart = document.getElementsByClassName(idname);
-						if(chart[0].__chartist__ === undefined) {
-							new Chartist.Line('.' + idname, {
-								labels: [],
-								series: [data[index].series[i]],
-							}, {
-								fullWidth: true,
-								chartPadding: { right: 40 },
-								height: graph_height,
-								axisX: {
-									showGrid: false
-								}
-							});
-						} else {
-							chart[0].__chartist__.update({'series': [data[index].series[i]]});
-						}
+				data[index].series[2].push(gpu['gpu_usage']); if ( data[index].series[2].length > 10 ) { data[index].series[2].shift(); }
 
-						document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.add('d-none');
-					})
-					.catch(err => {
-						console.log(err);
-						document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.remove('d-none');
-					});
-			}	
-		} else {
-			continue;
+				gputmp = document.getElementById(index + 'graphicTemp');
+				gputmp.innerHTML = 'Temp ' + gpu['gpu_temp_now'] + '°C';
+				set_temp_badge(gputmp, gpu['gpu_temp_now']);
+			} else {
+				gpumon.style.display = 'none';
+			}
+
+			// No chart? Create one. If the chart exists, replace the data with the latest collection.
+			chart = document.getElementsByClassName('a' + index + 'chart');
+			if(chart[0].__chartist__ === undefined) {
+				new Chartist.Line('.a'+ index + 'chart', {
+					labels: [],
+					series: [ [], [], [] ],
+				}, {
+					fullWidth: true,
+					chartPadding: { right: 40 },
+					height: 200,
+					axisY: {
+						high: 100
+					},
+					axisX: {
+						showGrid: false
+					}
+				});
+			} else {
+				chart[0].__chartist__.update({'series': data[index].series});
+				document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.add('d-none');
+			}
+		})
+		.catch(err => {
+			console.log(err);
+			document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.remove('d-none');
+		});
+}
+
+/**
+ * Updates the network scanner segment with data harvested from the Communicator Python API.
+ *
+ * @param {object} obj   The subset of the main configuration file relating to this entity.
+ * @param {int}    index The numerical indicator of the stage part.
+ */
+function update_netscan(obj, index) {
+	auth  = (obj.key !== undefined) ? "?key=" + obj.key : "";
+	fetch(obj.endpoint + auth + "&networkscan=yes")
+		.then(response => response.json())
+		.then(json => {
+			if (json['success'] == false) {
+				return null;
+			}
+
+			if (data[index] === undefined) {
+				data[index] = json.content;
+			}
+
+			for (i = 1; i < 255; i++) {
+				if (json.content[i] === undefined && data[index][i] === undefined) {
+					continue;
+				} else if (json.content[i] === undefined && typeof data[index][i] === "object") {
+					data[index][i].status = "down";
+				} else if (json.content[i].status === "up" && (data[index][i] === undefined || (typeof data[index][i] === "object" && data[index][i].status === "down"))) {
+					data[index][i] = json.content[i];
+				} else {
+					continue;
+				}
+			}
+
+			holder = document.getElementById(index+"netlist");
+			holder.innerHTML = "";
+			for (x in data[index]) {
+				content = data[index][x];
+				button_col = (content.status === "up") ? 'badge-success' : 'badge-danger';
+				button_lbl = (content.status === "up") ? 'up' : 'down';
+				hostname = (content.hostname === content.ip) ? '<span class="text-muted">N/A</span>' : content.hostname;
+				holder.insertAdjacentHTML('beforeend', "<tr><td><span class=\"badge "+button_col+" badge-pill\">"+button_lbl+"</span></td><td>"+hostname+"</td><td>"+content.ip+"</td></tr>");
+			}
+		});
+}
+
+/**
+ * Updates the display page with information from the CoinGecko free cryptocurrency API.
+ *
+ * @param {object} obj   The subset of the main configuration file relating to this entity.
+ * @param {int}    index The numerical indicator of the stage part.
+ */
+function update_crypto(obj, index) {
+	// If this is the start, create the slots in the data storage for our graph.
+	if (data[index] === undefined) {
+		data[index] = {'series': [], 'trackids': []};
+		for (let i = 0; i < obj.track.length; i++) {
+			data[index].series.push([]);
 		}
+	}
+
+	// Check if the data array already knows the API identifiers for the track specificiations.
+	/*if (data[index].trackids === undefined || data[index].trackids.length === 0) {
+		fetch('https://api.coingecko.com/api/v3/coins/list')
+			.then(response => response.json())
+			.then(json => {
+				json.forEach(coin => {
+					if( coin['symbol'].match(obj.track) ) {
+						data[index].trackids.push(coin['id']);
+					}
+				});
+			});
+	}*/
+
+	// Grab historical pricing data for each of our coins.
+	track_currency = (obj.currency === undefined) ? 'usd' : obj.currency;
+	track_days     = (obj.days === undefined) ? 1 : obj.days;
+	track_interval = (obj.interval === undefined) ? 'hourly' : obj.interval;
+	for (let i = 0; i < obj.track.length; i++) {
+		fetch('https://api.coingecko.com/api/v3/coins/' + obj.track[i] + '/market_chart?vs_currency=' + track_currency + '&days=' + track_days + '&interval=' + track_interval)
+			.then(response => response.json())
+			.then(json => {
+				var obj = endpoints.views[index];
+
+				data[index].series[i] = [];
+				json['prices'].forEach(interval => {
+					data[index].series[i].push(interval[1]);
+				});
+
+				idname  = 'crypto' + index + 'point' + i;
+				coinbox = document.getElementById(idname);
+				if (!coinbox) {
+					area = document.getElementById(index + 'charts');
+
+					title = document.createElement('h2');
+					title.innerHTML = obj.titles[i];
+
+					box           = document.createElement('div');
+					box.id        = idname;
+					box.className = idname + ' cryto-graph ' + obj.track[i];
+
+					area.appendChild(title);
+					area.appendChild(box);
+				}
+
+				// No chart? Create one. If the chart exists, replace the data with the latest collection.
+				graph_height = (obj.graphHeights === undefined) ? '200' : obj.graphHeights;
+				chart = document.getElementsByClassName(idname);
+				if(chart[0].__chartist__ === undefined) {
+					new Chartist.Line('.' + idname, {
+						labels: [],
+						series: [data[index].series[i]],
+					}, {
+						fullWidth: true,
+						chartPadding: { right: 40 },
+						height: graph_height,
+						axisX: {
+							showGrid: false
+						}
+					});
+				} else {
+					chart[0].__chartist__.update({'series': [data[index].series[i]]});
+				}
+
+				document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.add('d-none');
+			})
+			.catch(err => {
+				console.log(err);
+				document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.remove('d-none');
+			});
 	}
 }
 
