@@ -245,9 +245,6 @@ function update() {
 								fullWidth: true,
 								chartPadding: { right: 40 },
 								height: 200,
-								axisY: {
-									high: 100
-								},
 								axisX: {
 									showGrid: false
 								}
