@@ -149,26 +149,28 @@ function update_communicator(obj, index) {
 				gpumon.style.display = 'none';
 			}
 
-			// No chart? Create one. If the chart exists, replace the data with the latest collection.
-			chart = document.getElementsByClassName('a' + index + 'chart');
-			if(chart[0].__chartist__ === undefined) {
-				new Chartist.Line('.a'+ index + 'chart', {
-					labels: [],
-					series: [ [], [], [] ],
-				}, {
-					fullWidth: true,
-					chartPadding: { right: 40 },
-					height: 200,
-					axisY: {
-						high: 100
-					},
-					axisX: {
-						showGrid: false
-					}
-				});
-			} else {
-				chart[0].__chartist__.update({'series': data[index].series});
-				document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.add('d-none');
+			if(is_visible(index)) {
+				// No chart? Create one. If the chart exists, replace the data with the latest collection.
+				chart = document.getElementsByClassName('a' + index + 'chart');
+				if(chart[0].__chartist__ === undefined) {
+					new Chartist.Line('.a'+ index + 'chart', {
+						labels: [],
+						series: [ [], [], [] ],
+					}, {
+						fullWidth: true,
+						chartPadding: { right: 40 },
+						height: 200,
+						axisY: {
+							high: 100
+						},
+						axisX: {
+							showGrid: false
+						}
+					});
+				} else {
+					chart[0].__chartist__.update({'series': data[index].series});
+					document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.add('d-none');
+				}
 			}
 		})
 		.catch(err => {
@@ -249,6 +251,7 @@ function update_crypto(obj, index) {
 	}*/
 
 	// Grab historical pricing data for each of our coins.
+	if(!is_visible(index)) { return; }
 	track_currency = (obj.currency === undefined) ? 'usd' : obj.currency;
 	track_days     = (obj.days === undefined) ? 1 : obj.days;
 	track_interval = (obj.interval === undefined) ? 'hourly' : obj.interval;
@@ -419,7 +422,7 @@ function restart_carousel() {
  * @returns {boolean} Boolean based on stage visibility.
  */
 function is_visible(index) {
-	if ( index === activeStage ) {
+	if ( index === parseInt(activeStage) ) {
 		return true;
 	} else {
 		return false;
