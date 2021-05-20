@@ -1,9 +1,7 @@
 # Desktop Dashboard
 Displays information about enrolled network devices. **Unfinished - do not use without developer experience**.
 
-![2021-04-16-161649_480x800_scrot](https://user-images.githubusercontent.com/11209477/115046438-5962d400-9ecf-11eb-88ef-f7982495bb94.png)
-
-A NodeJS dashboard designed for a vertically mounted Raspberry Pi display.
+A NodeJS dashboard designed for a vertically mounted Raspberry Pi display. [See here][wk-screens] for examples of the screens.
 
 ## Start
 This now uses Electron to run. From source, install node dependencies then run start to open the application.
@@ -29,6 +27,7 @@ Adding the following to the end of your newly-available local copy (change the w
 ## Hiding the cursor
 Move/tap the cursor to the bottom right corner as far in as you can go. There's a hitbox area which will hide the cursor. Move the cursor away from this area and it will re-appear. 
 
+[wk-screens]: https://github.com/soup-bowl/deskdash/wiki/Screens
 [comm]: https://github.com/soup-bowl/deskdash-communicator
 [docker]: https://hub.docker.com/r/soupbowl/deskdash
 [ldir]: https://raspberrypi.stackexchange.com/a/102297
