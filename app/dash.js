@@ -473,4 +473,11 @@ window.onload = function() {
 			})
 		})
 		.catch(err => console.log(err));
+	
+	window.onkeydown= function(keypress){
+		// 67 = (C)ursor.
+		if(keypress.keyCode === 67){
+			toggle_cursor();
+		};
+	};
 };
