@@ -436,6 +436,19 @@ function toggle_dashboard() {
 	}
 }
 
+/**
+ * Toggles cursor visiblity by adding a CSS rule to the body tag.
+ */
+function toggle_cursor() {
+	bigchungus = document.getElementsByTagName('body')[0];
+
+	if ( ! bigchungus.classList.contains("no-cursor") ) {
+		bigchungus.classList.add("no-cursor");
+	} else {
+		bigchungus.classList.remove("no-cursor");
+	}
+}
+
 // --- Init ---
 
 window.onload = function() {

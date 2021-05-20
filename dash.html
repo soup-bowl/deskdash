@@ -24,12 +24,12 @@
 			<span class="control-splitter"></span>
 
 			<span id="stageButtons"></span>
-			<span class="hide-cursor-area"></span>
 		</div>
 
 		<div id="dashboard" class="d-none">
 			<div class="px-4 py-5 my-5 text-center">
 				<div class="container">
+					<h1>Dashboard Controls</h1>
 					<div class="row">
 						<div class="col-sm">
 							<button type="button" class="btn btn-lg btn-danger" onclick="window.close()"><i class="fas fa-power-off"></i></button>
@@ -42,6 +42,12 @@
 						<div class="col-sm">
 							<button type="button" class="btn btn-lg btn-secondary" onclick="restart_carousel();toggle_dashboard()"><i class="far fa-life-ring"></i></button>
 							<p>Restart Slider</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm">
+							<button type="button" class="btn btn-lg btn-secondary" onclick="toggle_cursor();toggle_dashboard()"><i class="fas fa-mouse-pointer"></i></button>
+							<p>Toggle Cursor</p>
 						</div>
 					</div>
 				</div>
