@@ -18,14 +18,35 @@
 		</div>
 
 		<div id="controls">
-			<button type="button" class="btn btn-danger"    onclick="window.close()"><i class="fas fa-power-off"></i></button>
-			<button type="button" class="btn btn-secondary" onclick="window.location.reload(false)"><i class="fas fa-redo"></i></button>
+			<button type="button" class="btn btn-primary" onclick="toggle_dashboard()"><i class="fas fa-bars"></i></button>
 			<button type="button" class="btn btn-secondary" onclick="$('#ysmrrbrrlarbrrrr').carousel('next')"><i class="fas fa-forward"></i></button>
 
 			<span class="control-splitter"></span>
 
 			<span id="stageButtons"></span>
 			<span class="hide-cursor-area"></span>
+		</div>
+
+		<div id="dashboard" class="d-none">
+			<div class="px-4 py-5 my-5 text-center">
+				<div class="container">
+					<div class="row">
+						<div class="col-sm">
+							<button type="button" class="btn btn-lg btn-danger" onclick="window.close()"><i class="fas fa-power-off"></i></button>
+							<p>Exit Application</p>
+						</div>
+						<div class="col-sm">
+							<button type="button" class="btn btn-lg btn-secondary" onclick="window.location.reload(false)"><i class="fas fa-redo"></i></button>
+							<p>Reload All</p>
+						</div>
+						<div class="col-sm">
+							<button type="button" class="btn btn-lg btn-secondary" onclick="restart_carousel();toggle_dashboard()"><i class="fas fa-redo"></i></button>
+							<p>Restart Slider</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<button type="button" class="btn btn-primary close-dash" onclick="toggle_dashboard()"><i class="fas fa-times"></i></button>
 		</div>
 
 		<script src="node_modules/jquery/dist/jquery.js"></script>

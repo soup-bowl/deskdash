@@ -423,6 +423,19 @@ function is_visible(index) {
 	}
 }
 
+/**
+ * Toggles the visibility of the dashboard.
+ */
+function toggle_dashboard() {
+	dashboard = document.getElementById("dashboard");
+
+	if ( ! dashboard.classList.contains("d-none") ) {
+		dashboard.classList.add("d-none");
+	} else {
+		dashboard.classList.remove("d-none");
+	}
+}
+
 // --- Init ---
 
 window.onload = function() {
