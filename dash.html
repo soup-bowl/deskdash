@@ -17,14 +17,7 @@
 			<h1>Loading...</h1>
 		</div>
 
-		<div id="controls">
-			<button type="button" class="btn btn-primary" onclick="toggle_dashboard()"><i class="fas fa-bars"></i></button>
-			<button type="button" class="btn btn-secondary" onclick="$('#ysmrrbrrlarbrrrr').carousel('next')"><i class="fas fa-forward"></i></button>
-
-			<span class="control-splitter"></span>
-
-			<span id="stageButtons"></span>
-		</div>
+		<button type="button" class="open-dash btn btn-primary" onclick="toggle_dashboard()"><i class="fas fa-bars"></i></button>
 
 		<div id="dashboard" class="d-none">
 			<div class="px-4 py-5 my-5 text-center">
@@ -46,10 +39,16 @@
 					</div>
 					<div class="row">
 						<div class="col-sm">
+							<button type="button" class="btn btn-lg btn-secondary" onclick="$('#ysmrrbrrlarbrrrr').carousel('next')"><i class="fas fa-forward"></i></button>
+							<p>Skip Slide</p>
+						</div>
+						<div class="col-sm">
 							<button type="button" class="btn btn-lg btn-secondary" onclick="toggle_cursor();toggle_dashboard()"><i class="fas fa-mouse-pointer"></i></button>
 							<p>Toggle Cursor</p>
 						</div>
 					</div>
+					<h1>Current Slide Controls</h1>
+					<span id="stageButtons"></span>
 				</div>
 			</div>
 			<button type="button" class="btn btn-primary close-dash" onclick="toggle_dashboard()"><i class="fas fa-times"></i></button>

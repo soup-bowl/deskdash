@@ -318,7 +318,10 @@ function set_stage_buttons(id, canShutdown = false) {
 	btnHtml   = '';
 
 	if (canShutdown) {
-		btnHtml += "<button type=\"button\" class=\"btn btn-secondary\" onclick=\"execute_shutdown(" + id + ")\"><i class=\"fas fa-power-off\"></i></button>";
+		btnHtml += "<div class=\"col-sm\">";
+		btnHtml += "<button type=\"button\" class=\"btn btn-lg btn-secondary\" onclick=\"execute_shutdown(" + id + ")\"><i class=\"fas fa-power-off\"></i></button>";
+		btnHtml += "<p>Shutdown PC</p>";
+		btnHtml += "</div>";
 	}
 
 	stageBtns.innerHTML = btnHtml;
