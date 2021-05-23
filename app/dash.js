@@ -184,8 +184,8 @@ function humanize_size(raw_bits) {
 
 /**
  * Replicates the PHP functionality of the same name. Sorry, can't take the PHP dev out of me :(
+ * {@link https://stackoverflow.com/a/61787359|StackOverflow}.
  *
- * @url https://stackoverflow.com/a/61787359
  * @param {string}   uri      URL to get stuff from.
  * @param {callback} callback Callback routine with the response (or attach .then).
  * @returns 
