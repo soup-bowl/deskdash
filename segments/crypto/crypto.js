@@ -84,11 +84,10 @@ function update_crypto(obj, index) {
 					chart[0].__chartist__.update({'series': [data[index].series[i]]});
 				}
 
-				document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.add('d-none');
+				document.getElementById(index + 'connectStat').classList.add('d-none');
 			})
 			.catch(err => {
-				console.log(err);
-				document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.remove('d-none');
+				document.getElementById(index + 'connectStat').classList.remove('d-none');
 			});
 	}
 }

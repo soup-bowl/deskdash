@@ -20,6 +20,8 @@ function update_netscan(obj, index) {
 				return null;
 			}
 
+			document.getElementById(index + 'connectStat').classList.add('d-none');
+
 			if (data[index] === undefined) {
 				data[index] = json.content;
 			}
@@ -45,5 +47,9 @@ function update_netscan(obj, index) {
 				hostname = (content.hostname === content.ip) ? '<span class="text-muted">N/A</span>' : content.hostname;
 				holder.insertAdjacentHTML('beforeend', "<tr><td><span class=\"badge "+button_col+" badge-pill\">"+button_lbl+"</span></td><td>"+hostname+"</td><td>"+content.ip+"</td></tr>");
 			}
+		})
+		.catch(err => {
+			document.getElementById(index + 'connectStat').classList.remove('d-none');
 		});
+		
 }

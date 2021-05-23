@@ -66,7 +66,7 @@ function update_communicator(obj, index) {
 				gpumon.style.display = 'none';
 			}
 
-			document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.add('d-none');
+			document.getElementById(index + 'connectStat').classList.add('d-none');
 
 			if(is_visible(index)) {
 				// No chart? Create one. If the chart exists, replace the data with the latest collection.
@@ -92,7 +92,6 @@ function update_communicator(obj, index) {
 			}
 		})
 		.catch(err => {
-			console.log(err);
-			document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.remove('d-none');
+			document.getElementById(index + 'connectStat').classList.remove('d-none');
 		});
 }

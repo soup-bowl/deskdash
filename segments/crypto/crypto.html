@@ -1,14 +1,7 @@
 <div class="segment-crypto px-4 py-2 my-5 text-center">
 	<h1 class="display-5 fw-bold machine-name">Crypto Tracker</h1>
-	<p class="provider">Powered by CoinGecko API</p>
+	<p class="provider">Powered by CoinGecko API<span id="{{CHANGE}}connectStat" class="badge badge-secondary badge-pill">Disconnected</span></p>
 	<div class="container">
 		<div id="{{CHANGE}}charts" class="chartbox"></div>
-	</div>
-
-	<div class="connection-lost w-100 h-100 hide">
-		<div class="px-4 py-5 my-5 text-center">
-			<h1>Connection lost.</h1>
-			<p>Attempting to reconnect...</p>
-		</div>
 	</div>
 </div>
