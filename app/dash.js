@@ -98,14 +98,8 @@ function load_js_file(file) {
 function update() {
 	for (let index = 0; index < endpoints.views.length; index++) {
 		var obj = endpoints.views[index];
-		if ( obj.type == "communicator" ) {
-			update_communicator(obj, index);
-		} else if ( obj.type == "netscan" ) {
-			update_netscan(obj, index);
-		} else if ( obj.type == "timedate" ) {
-			update_timedate(obj, index);
-		} else if ( obj.type == "crypto" ) {
-			update_crypto(obj, index);
+		if ( window['update_' + obj.type] !== undefined ) {
+			window['update_' + obj.type](obj, index);
 		} else {
 			continue;
 		}
