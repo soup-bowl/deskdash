@@ -1,4 +1,11 @@
 /**
+ * Deskdash - Raspberry Pi equipment monitor.
+ *
+ * @author soup-bowl <code@soupbowl.io>
+ * @package deskdash
+ */
+
+/**
  * Updates the network scanner segment with data harvested from the {@link https://github.com/soup-bowl/deskdash-communicator|Communciator} Python API.
  *
  * @param {object} obj   The subset of the main configuration file relating to this entity.

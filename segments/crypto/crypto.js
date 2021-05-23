@@ -1,4 +1,11 @@
 /**
+ * Deskdash - Raspberry Pi equipment monitor.
+ *
+ * @author soup-bowl <code@soupbowl.io>
+ * @package deskdash
+ */
+
+/**
  * Updates the display page with information from the CoinGecko free cryptocurrency API.
  *
  * @param {object} obj   The subset of the main configuration file relating to this entity.

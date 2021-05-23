@@ -1,4 +1,11 @@
 /**
+ * Deskdash - Raspberry Pi equipment monitor.
+ *
+ * @author soup-bowl <code@soupbowl.io>
+ * @package deskdash
+ */
+
+/**
  * Updates the time and date segment.
  *
  * @param {object} obj   The subset of the main configuration file relating to this entity.
