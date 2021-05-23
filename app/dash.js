@@ -41,21 +41,9 @@ async function init() {
 	}
 	
 	for (let index = 0; index < endpoints.views.length; index++) {
-		if ( endpoints.views[index].type == "communicator" ) {
-			await load_segment('communicator', index);
-		} else if ( endpoints.views[index].type == "timedate" ) {
-			await load_segment('timedate', index);
-		} else if ( endpoints.views[index].type == "helloworld" ) {
-			await load_segment('helloworld', index);
-		} else if( endpoints.views[index].type == "netscan" ) {
-			await load_segment('netscan', index);
-		} else if( endpoints.views[index].type == "crypto" ) {
-			await load_segment('crypto', index);
-		} else {
-			console.log("Invalid type: " + endpoints.views[index].type);
-			continue;
-		}
+		await load_segment(endpoints.views[index].type, index);
 	}
+
 	document.getElementById('loading').classList.add('d-none');
 	document.getElementById('e0').classList.add('active');
 }
@@ -77,12 +65,20 @@ function load_segment(segment, identifier) {
 	});
 }
 
+/**
+ * Load each counterpart JavaScript file for each screen used.
+ */
 function load_scripts() {
 	segmentLoads.forEach(segment => {
 		load_js_file("segments/" + segment + "/" + segment + ".js");
 	});
 }
 
+/**
+ * Dynamically loads in a JavaScript file.
+ *
+ * @param {string} file Path to JS file.
+ */
 function load_js_file(file) {
 	var jsFile = document.createElement("script");
 	jsFile.type = "application/javascript";
