@@ -1,5 +1,5 @@
 /**
- * Updates the network scanner segment with data harvested from the Communicator Python API.
+ * Updates the network scanner segment with data harvested from the {@link https://github.com/soup-bowl/deskdash-communicator|Communciator} Python API.
  *
  * @param {object} obj   The subset of the main configuration file relating to this entity.
  * @param {int}    index The numerical indicator of the stage part.
