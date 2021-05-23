@@ -97,7 +97,9 @@ function update() {
  * @param {int}    index The numerical indicator of the stage part.
  */
 function update_communicator(obj, index) {
-	auth  = (obj.key !== undefined) ? "?key=" + obj.key : "";
+	let gLimit  = (obj.limit !== undefined) ? Number(obj.limit) : 10; 
+	let gHeight = (obj.graphHeight !== undefined) ? Number(obj.graphHeight) : 200;
+	auth        = (obj.key !== undefined) ? "?key=" + obj.key : "";
 	fetch(obj.endpoint + auth)
 		.then(response => response.json())
 		.then(json => {
@@ -120,7 +122,7 @@ function update_communicator(obj, index) {
 				cpu = stat['cpu'];
 				document.getElementById(index + 'processorUsage').innerHTML = 'Usage: ' + cpu['cpu_usage']  + '%';
 
-				data[index].series[0].push(cpu['cpu_usage']); if ( data[index].series[0].length > 10 ) { data[index].series[0].shift(); }
+				data[index].series[0].push(cpu['cpu_usage']); if ( data[index].series[0].length > gLimit ) { data[index].series[0].shift(); }
 			}
 
 			if (stat['ram']['available']) {
@@ -129,7 +131,7 @@ function update_communicator(obj, index) {
 				document.getElementById(index + 'memoryUsage').innerHTML = 'Usage: ' + mem['real_memory_usage'] + '%';
 				document.getElementById(index + 'swapUsage').innerHTML = 'Swap: ' + mem['swap_memory_usage'] + '%';
 
-				data[index].series[1].push(mem['real_memory_usage']); if ( data[index].series[1].length > 10 ) { data[index].series[1].shift(); }
+				data[index].series[1].push(mem['real_memory_usage']); if ( data[index].series[1].length > gLimit ) { data[index].series[1].shift(); }
 			}
 
 			var gpumon = document.getElementById(index + 'graphicSegment');
@@ -140,7 +142,7 @@ function update_communicator(obj, index) {
 				document.getElementById(index + 'graphicName').innerHTML = gpu['gpu_name'];
 				document.getElementById(index + 'graphicUsage').innerHTML = 'Usage: ' + gpu['gpu_usage'] + '%';
 
-				data[index].series[2].push(gpu['gpu_usage']); if ( data[index].series[2].length > 10 ) { data[index].series[2].shift(); }
+				data[index].series[2].push(gpu['gpu_usage']); if ( data[index].series[2].length > gLimit ) { data[index].series[2].shift(); }
 
 				gputmp = document.getElementById(index + 'graphicTemp');
 				gputmp.innerHTML = 'Temp ' + gpu['gpu_temp_now'] + '°C';
@@ -148,6 +150,8 @@ function update_communicator(obj, index) {
 			} else {
 				gpumon.style.display = 'none';
 			}
+
+			document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.add('d-none');
 
 			if(is_visible(index)) {
 				// No chart? Create one. If the chart exists, replace the data with the latest collection.
@@ -159,7 +163,7 @@ function update_communicator(obj, index) {
 					}, {
 						fullWidth: true,
 						chartPadding: { right: 40 },
-						height: 200,
+						height: gHeight,
 						axisY: {
 							high: 100
 						},
@@ -169,7 +173,6 @@ function update_communicator(obj, index) {
 					});
 				} else {
 					chart[0].__chartist__.update({'series': data[index].series});
-					document.getElementById('e'+index).getElementsByClassName('connection-lost')[0].classList.add('d-none');
 				}
 			}
 		})
