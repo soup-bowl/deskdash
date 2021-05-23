@@ -9,6 +9,7 @@ var endpoints; // Loaded with configuration data from config.json, called at the
 var segmentLoads = [];
 var data = []; // Populated with collected data from participants.
 var activeStage = 0;
+let carouselCommand;
 
 // --- Initalisation segment ---
 
@@ -260,12 +261,18 @@ window.onload = function() {
 				update();
 			}, 5000);
 
-			// TODO - Replace with Native JS. In fact replace Bootstrap Carousel, it's always fighting me...
-			$('#ysmrrbrrlarbrrrr').on('slide.bs.carousel', function (slide) {
-				activeStage = slide.relatedTarget.id.slice(-1);
+			carouselCommand = new BSN.Carousel('#ysmrrbrrlarbrrrr', {
+				// these options values will override the ones set via DATA API
+				interval: 30000,
+				pause: false,
+				keyboard: false
+			});
+
+			document.getElementById('ysmrrbrrlarbrrrr').addEventListener('slide.bs.carousel', event => {
+				activeStage = event.relatedTarget.id.slice(-1);
 				canShutdown = (typeof endpoints.views[activeStage].permitShutdown !== 'undefined') ? endpoints.views[activeStage].permitShutdown : false;
 				set_stage_buttons(activeStage, canShutdown);
-			})
+			});
 		})
 		.catch(err => console.log(err));
 	

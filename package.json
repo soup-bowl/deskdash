@@ -22,6 +22,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.3",
     "bootstrap": "^4.6.0",
+    "bootstrap.native": "^3.0.15",
     "chartist": "^0.11.4"
   }
 }
