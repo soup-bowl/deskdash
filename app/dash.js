@@ -93,6 +93,9 @@ function load_js_file(file) {
  * Initiates an update data routine across all the stages.
  */
 function update() {
+	dt = get_datetime();
+	document.getElementById('globaltime').innerHTML = dt.t;
+	document.getElementById('globaldate').innerHTML = dt.d;
 	for (let index = 0; index < endpoints.views.length; index++) {
 		var obj = endpoints.views[index];
 		if ( window['update_' + obj.type] !== undefined ) {
@@ -246,6 +249,21 @@ function toggle_cursor() {
 	} else {
 		bigchungus.classList.remove("no-cursor");
 	}
+}
+
+/**
+ * Returns time & date. Pass true for 24 hour timer.
+ * 
+ * @param {boolean} military True for 24 hour clock.
+ * @returns {object} 't' for time and 'd' for date.
+ */
+function get_datetime(military = false) {
+	var dt = dayjs();
+
+	return {
+		't': (military) ? dt.format('H:mm') : dt.format('h:mm a'),
+		'd': dt.format('DD/MM/YYYY')
+	};
 }
 
 // --- Init ---

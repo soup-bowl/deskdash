@@ -20,7 +20,10 @@
 		<button type="button" class="open-dash btn btn-secondary" onclick="toggle_dashboard()"><i class="fas fa-bars"></i></button>
 
 		<div id="dashboard" class="d-none">
-			<div class="px-4 py-5 my-5 text-center">
+			<header class="d-flex justify-content-center py-3">
+				<p class="h2"><span id="globaltime"></span> - <span id="globaldate"></span></p>
+			</header>
+			<div class="px-4 my-5 text-center">
 				<div class="container">
 					<h1>Dashboard Controls</h1>
 					<div class="row">

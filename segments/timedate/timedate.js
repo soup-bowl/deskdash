@@ -13,8 +13,8 @@
  */
 function update_timedate(obj, index) {
 	var military = (obj.military !== undefined) ? Boolean(obj.military) : false;
-	var dt       = dayjs();
+	var dt       = get_datetime(military);
 
-	document.getElementById(index + 'time').innerHTML = (military) ? dt.format('H:mm') : dt.format('h:mm a');
-	document.getElementById(index + 'date').innerHTML = dt.format('DD/MM/YYYY');
+	document.getElementById(index + 'time').innerHTML = dt.t;
+	document.getElementById(index + 'date').innerHTML = dt.d;
 }
