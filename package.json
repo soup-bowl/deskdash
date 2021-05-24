@@ -4,7 +4,8 @@
   "version": "0.2.0",
   "main": "main.js",
   "devDependencies": {
-    "electron": "^12.0.7"
+    "electron": "^12.0.7",
+    "sass": "^1.34.0"
   },
   "repository": {
     "type": "git",
@@ -17,7 +18,8 @@
   },
   "homepage": "https://github.com/soup-bowl/deskdash#readme",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "compile-style": "node node_modules/sass/sass.js app/dash.scss app/dash.css"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.3",

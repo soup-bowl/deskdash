@@ -1,210 +1,189 @@
-/*
- * Deskdash - Raspberry Pi equipment monitor.
- *
- * @author soup-bowl <code@soupbowl.io>
- * @package deskdash
- */
-
-body {
-	background-color: black;
-	color: white;
-	font-size: 1.25rem;
-}
-
-.no-cursor {
-	cursor: none;
-}
-
-/* main stage config */
-
-#loading {
-	background-color: #2f2f2f;
-	opacity: 0.75;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-	z-index: 999;
-}
-
-#loading h1 {
-	position: absolute;
-    top: 50%;
-    left: 50%;
-}
-
-.roulette-item {
-	position: fixed;
-	background-size: cover;
-	width:100%;
-	height:100%;
-	top: 0;
-	left: 0;
-}
-
-.roulette-item.bgimage {
-	text-shadow: 0 0 20px #000;
-}
-
-#dashboard {
-	z-index: 550;
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-color: rgb(0 0 0 / 85%);
-	cursor: auto;
-}
-
-#dashboard .close-dash {
-	position: fixed;
-	bottom: 5px;
-	left: 5px;
-}
-
-.open-dash {
-	position: fixed;
-	bottom: 5px;
-	left: 5px;
-	opacity: 0.5;
-}
-
-/* ! main stage config */
-
-/* segment-wide */
-.segment-communicator .list-group-item,
-.segment-netscan      .list-group-item  {
-	background-color: inherit;
-	border: 1px solid rgb(193 193 193 / 13%);
-}
-
-.segment-communicator .connection-lost,
-.segment-crypto       .connection-lost {
-	z-index: 999;
-	position: absolute;
-    top: 0;
-    left: 0;
-    background-color: rgb(0 0 0 / 90%);
-}
-
-.segment-communicator .connection-lost h1,
-.segment-crypto       .connection-lost h1 {
-	font-size: 4rem;
-}
-/* ! segment-wide */
-
-/* timedate-specific */
-.segment-timedate .td-main {
-	font-size:4em;
-}
-
-.segment-timedate .td-sub {
-	font-size:2em;
-}
-
-/* ! timedate-specific */
-
-/* communicator-specific */
 .segment-communicator .chartbox {
-	background-color: rgb(0 0 0 / 50%);
-	border: 1px solid rgb(193 193 193 / 13%);
-	border-radius: 0.25rem;
-	padding: 20px;
-    margin-bottom: 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(193, 193, 193, 0.13);
+  border-radius: 0.25rem;
+  padding: 20px;
+  margin-bottom: 20px;
 }
 
 .segment-communicator .machine-name {
-	font-size: 3em;
+  font-size: 3em;
 }
 
 .segment-communicator .machine-sub {
-	font-size: 0.9em;
+  font-size: 0.9em;
 }
 
 .segment-communicator .splitter {
-	margin: 0 5px 0 5px;
+  margin: 0 5px 0 5px;
 }
 
 .segment-communicator .list-group-item {
-	border-left-width: 2px;
+  border-left-width: 2px;
 }
 
 .segment-communicator .list-processor {
-	border-left-color: #ff3434;
+  border-left-color: #ff3434;
 }
 
 .segment-communicator .list-memory {
-	border-left-color: #ffff47;
+  border-left-color: #ffff47;
 }
 
 .segment-communicator .list-graphics {
-	border-left-color: #5656ff;
+  border-left-color: #5656ff;
 }
 
 .segment-communicator .ct-series-a .ct-bar,
 .segment-communicator .ct-series-a .ct-line,
 .segment-communicator .ct-series-a .ct-point,
 .segment-communicator .ct-series-a .ct-slice-donut {
-    stroke: #ff3434;
+  stroke: #ff3434;
 }
 
 .segment-communicator .ct-series-b .ct-bar,
 .segment-communicator .ct-series-b .ct-line,
 .segment-communicator .ct-series-b .ct-point,
 .segment-communicator .ct-series-b .ct-slice-donut {
-    stroke: #ffff47;
+  stroke: #ffff47;
 }
 
 .segment-communicator .ct-series-c .ct-bar,
 .segment-communicator .ct-series-c .ct-line,
 .segment-communicator .ct-series-c .ct-point,
 .segment-communicator .ct-series-c .ct-slice-donut {
-    stroke: #5656ff;
+  stroke: #5656ff;
 }
 
 .segment-communicator .ct-grid {
-	stroke-dasharray: 0px 0px;
-	stroke: rgb(193 193 193 / 13%);
+  stroke-dasharray: 0px 0px;
+  stroke: rgba(193, 193, 193, 0.13);
 }
 
 .segment-communicator .ct-label {
-	color: rgb(193 193 193);
+  color: #c1c1c1;
 }
-/* ! communicator-specific */
 
-/* Crypto-specific */
 .segment-crypto .cryto-graph {
-	background-color: rgb(0 0 0 / 50%);
-	border: 1px solid rgb(193 193 193 / 13%);
-	border-radius: 0.25rem;
-	padding: 20px;
-    margin-bottom: 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(193, 193, 193, 0.13);
+  border-radius: 0.25rem;
+  padding: 20px;
+  margin-bottom: 20px;
 }
 
 .segment-crypto .cryto-graph .ct-label {
-	color: rgb(193 193 193);
+  color: #c1c1c1;
 }
 
 .segment-crypto .bitcoin .ct-series-a .ct-bar,
 .segment-crypto .bitcoin .ct-series-a .ct-line,
 .segment-crypto .bitcoin .ct-series-a .ct-point,
 .segment-crypto .bitcoin .ct-series-a .ct-slice-donut {
-    stroke: #f7931a;
+  stroke: #f7931a;
 }
 
 .segment-crypto .ethereum .ct-series-a .ct-bar,
 .segment-crypto .ethereum .ct-series-a .ct-line,
 .segment-crypto .ethereum .ct-series-a .ct-point,
 .segment-crypto .ethereum .ct-series-a .ct-slice-donut {
-    stroke: #627eea;
+  stroke: #627eea;
 }
 
 .segment-crypto .basic-attention-token .ct-series-a .ct-bar,
 .segment-crypto .basic-attention-token .ct-series-a .ct-line,
 .segment-crypto .basic-attention-token .ct-series-a .ct-point,
 .segment-crypto .basic-attention-token .ct-series-a .ct-slice-donut {
-    stroke: #ff5000;
+  stroke: #ff5000;
 }
-/* ! Crypto-specific */
+
+.segment-timedate .td-main {
+  font-size: 4em;
+}
+
+.segment-timedate .td-sub {
+  font-size: 2em;
+}
+
+/*
+ * Deskdash - Raspberry Pi equipment monitor.
+ *
+ * @author soup-bowl <code@soupbowl.io>
+ * @package deskdash
+ */
+body {
+  background-color: black;
+  color: white;
+  font-size: 1.25rem;
+}
+
+.no-cursor {
+  cursor: none;
+}
+
+/* main stage config */
+#loading {
+  background-color: #2f2f2f;
+  opacity: 0.75;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+}
+
+#loading h1 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.roulette-item {
+  position: fixed;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.roulette-item.bgimage {
+  text-shadow: 0 0 20px #000;
+}
+
+#dashboard {
+  z-index: 550;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  cursor: auto;
+}
+
+#dashboard .close-dash {
+  position: fixed;
+  bottom: 5px;
+  left: 5px;
+}
+
+.open-dash {
+  position: fixed;
+  bottom: 5px;
+  left: 5px;
+  opacity: 0.5;
+}
+
+/* ! main stage config */
+/* segment-wide */
+.segment-communicator .list-group-item,
+.segment-netscan .list-group-item {
+  background-color: inherit;
+  border: 1px solid rgba(193, 193, 193, 0.13);
+}
+
+/* ! segment-wide */
+
+/*# sourceMappingURL=dash.css.map */

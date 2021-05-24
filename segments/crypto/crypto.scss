@@ -1,0 +1,32 @@
+.segment-crypto .cryto-graph {
+	background-color: rgb(0 0 0 / 50%);
+	border: 1px solid rgb(193 193 193 / 13%);
+	border-radius: 0.25rem;
+	padding: 20px;
+    margin-bottom: 20px;
+}
+
+.segment-crypto .cryto-graph .ct-label {
+	color: rgb(193 193 193);
+}
+
+.segment-crypto .bitcoin .ct-series-a .ct-bar,
+.segment-crypto .bitcoin .ct-series-a .ct-line,
+.segment-crypto .bitcoin .ct-series-a .ct-point,
+.segment-crypto .bitcoin .ct-series-a .ct-slice-donut {
+    stroke: #f7931a;
+}
+
+.segment-crypto .ethereum .ct-series-a .ct-bar,
+.segment-crypto .ethereum .ct-series-a .ct-line,
+.segment-crypto .ethereum .ct-series-a .ct-point,
+.segment-crypto .ethereum .ct-series-a .ct-slice-donut {
+    stroke: #627eea;
+}
+
+.segment-crypto .basic-attention-token .ct-series-a .ct-bar,
+.segment-crypto .basic-attention-token .ct-series-a .ct-line,
+.segment-crypto .basic-attention-token .ct-series-a .ct-point,
+.segment-crypto .basic-attention-token .ct-series-a .ct-slice-donut {
+    stroke: #ff5000;
+}
