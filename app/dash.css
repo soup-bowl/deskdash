@@ -129,6 +129,9 @@ body {
   top: 0;
   left: 0;
 }
+.roulette-item.bgimage {
+  text-shadow: 0 0 20px #000;
+}
 
 .roulette-item.bgimage {
   text-shadow: 0 0 20px #000;

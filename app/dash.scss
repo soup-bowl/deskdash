@@ -45,10 +45,10 @@ body {
 	height:100%;
 	top: 0;
 	left: 0;
-}
 
-.roulette-item.bgimage {
-	text-shadow: 0 0 20px #000;
+	&.bgimage {
+		text-shadow: 0 0 20px #000;
+	}
 }
 
 #dashboard {
