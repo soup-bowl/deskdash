@@ -65,12 +65,35 @@ function update_crypto(obj, index) {
 					area.appendChild(box);
 				}
 
+				// Generate X-axis labels.
+				if (data[index].labels === undefined) {
+					var axis_x = [];
+					for (let j = 0; j < data[index].series[i].length; j++) {
+						if (j === 0) {
+							axis_x.push('Now');
+						} else {
+							var unit = '';
+							if (track_interval === 'hourly') {
+								unit = 'hr';
+							} else if (track_interval === 'monthly') {
+								unit = 'mn';
+							} else if (track_interval === 'yearly') {
+								unit = 'yr';
+							}
+
+							axis_x.push('+' + j + ' ' + unit);
+						}
+					}
+					axis_x.reverse();
+					data[index].labels = axis_x;
+				}
+
 				// No chart? Create one. If the chart exists, replace the data with the latest collection.
 				graph_height = (obj.graphHeights === undefined) ? '200' : obj.graphHeights;
 				chart = document.getElementsByClassName(idname);
 				if(chart[0].__chartist__ === undefined) {
 					new Chartist.Line('.' + idname, {
-						labels: [],
+						labels: data[index].labels,
 						series: [data[index].series[i]],
 					}, {
 						fullWidth: true,
@@ -81,7 +104,10 @@ function update_crypto(obj, index) {
 						}
 					});
 				} else {
-					chart[0].__chartist__.update({'series': [data[index].series[i]]});
+					chart[0].__chartist__.update({
+						'labels': data[index].labels,
+						'series': [data[index].series[i]]
+					});
 				}
 
 				document.getElementById(index + 'connectStat').classList.add('d-none');
