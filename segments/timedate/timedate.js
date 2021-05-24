@@ -12,7 +12,9 @@
  * @param {int}    index The numerical indicator of the stage part.
  */
 function update_timedate(obj, index) {
-	var dt = new Date();
-	document.getElementById(index + 'time').innerHTML = dt.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit', hour12: true});
-	document.getElementById(index + 'date').innerHTML = dt.toLocaleDateString();
+	var military = (obj.military !== undefined) ? Boolean(obj.military) : false;
+	var dt       = dayjs();
+
+	document.getElementById(index + 'time').innerHTML = (military) ? dt.format('H:mm') : dt.format('h:mm a');
+	document.getElementById(index + 'date').innerHTML = dt.format('DD/MM/YYYY');
 }
