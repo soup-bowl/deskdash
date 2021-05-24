@@ -115,7 +115,6 @@ body {
   height: 100%;
   z-index: 999;
 }
-
 #loading h1 {
   position: absolute;
   top: 50%;
@@ -145,7 +144,6 @@ body {
   background-color: rgba(0, 0, 0, 0.85);
   cursor: auto;
 }
-
 #dashboard .close-dash {
   position: fixed;
   bottom: 5px;
