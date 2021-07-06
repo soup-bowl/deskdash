@@ -311,6 +311,7 @@ function toggle_stage(stage_id) {
 		// If the currently visible slide went down, shift us back to the first visible one.
 		if (stage_id === activeStage) {
 			document.getElementById("stage").firstChild.classList.add('active');
+			activeStage = 0;
 		}
 	} else {
 		document.getElementById("stage").appendChild(stage);
