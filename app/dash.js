@@ -266,6 +266,26 @@ function get_datetime(military = false) {
 	};
 }
 
+/**
+ * Moves the specified stage ID to the vanishing cabinet.
+ *
+ * @param {int} stage_id The stage identifier (int, without the 'e'). 
+ */
+function toggle_stage(stage_id) {
+	stage   = document.getElementById('e' + stage_id);
+	current = stage.parentNode.id;
+
+	if (current === "stage") {
+		document.getElementById("stageLeft").appendChild(stage);
+		// If the currently visible slide went down, shift us back to the first visible one.
+		if (stage_id === activeStage) {
+			document.getElementById("stage").firstChild.classList.add('active');
+		}
+	} else {
+		document.getElementById("stage").appendChild(stage);
+	}
+}
+
 // --- Init ---
 
 window.onload = function() {
