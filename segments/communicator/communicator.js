@@ -106,6 +106,7 @@ function update_communicator(obj, index) {
 			if (data[index].errors > 5) {
 				console.log('5 counts of URL errors on stage ' + index + '. Dropping stage.');
 				toggle_stage(index);
+				data[index].errors = 0;
 			}
 		});
 }

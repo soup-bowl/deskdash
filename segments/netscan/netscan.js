@@ -17,6 +17,11 @@ function update_netscan(obj, index) {
 		data[index] = {'content': undefined, 'errors': 0};
 	}
 
+	// Don't continue if this has been unstaged.
+	if (!is_stage_enabled(index)) {
+		return;
+	}
+
 	auth  = (obj.key !== undefined) ? "?key=" + obj.key : "";
 	fetch(obj.endpoint + auth + "&networkscan=yes")
 		.then(response => response.json())
@@ -61,6 +66,7 @@ function update_netscan(obj, index) {
 			if (data[index].errors > 5) {
 				console.log('5 counts of URL errors on stage ' + index + '. Dropping stage.');
 				toggle_stage(index);
+				data[index].errors = 0;
 			}
 		});
 		
