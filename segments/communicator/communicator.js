@@ -12,6 +12,16 @@
  * @param {int}    index The numerical indicator of the stage part.
  */
 function update_communicator(obj, index) {
+	// If this is the start, create the slots.
+	if (data[index] === undefined) {
+		data[index] = {'series': [ [], [] ], 'errors': 0};
+	}
+
+	// Don't continue if this has been unstaged.
+	if (!is_stage_enabled(index)) {
+		return;
+	}
+
 	let gLimit  = (obj.limit !== undefined) ? Number(obj.limit) : 10; 
 	let gHeight = (obj.graphHeight !== undefined) ? Number(obj.graphHeight) : 200;
 	auth        = (obj.key !== undefined) ? "?key=" + obj.key : "";
@@ -19,13 +29,11 @@ function update_communicator(obj, index) {
 		.then(response => response.json())
 		.then(json => {
 			stat = json['content'];
+			data[index].errors = 0;
 
-			// If this is the start, create the slots in the data storage for our graph.
-			if (data[index] === undefined) {
-				data[index] = {'series': [ [], [] ]};
-				if (stat['gpu']['available']) {
-					data[index].series.push([]);
-				}
+			// GPU tracking? Add a slot for it.
+			if (stat['gpu']['available']) {
+				data[index].series.push([]);
 			}
 
 			// Set the header to the name of the machine.
@@ -93,5 +101,11 @@ function update_communicator(obj, index) {
 		})
 		.catch(err => {
 			document.getElementById(index + 'connectStat').classList.remove('d-none');
+			data[index].errors++;
+
+			if (data[index].errors > 5) {
+				console.log('5 counts of URL errors on stage ' + index + '. Dropping stage.');
+				toggle_stage(index);
+			}
 		});
 }

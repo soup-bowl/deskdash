@@ -93,10 +93,15 @@ function load_js_file(file) {
  * Initiates an update data routine across all the stages.
  */
 function update() {
+	// Update the alert count in the dashboard.
+	faultCount = document.getElementById("stageLeft").children.length;
+	document.getElementById("alertCount").innerHTML = faultCount;
+
 	dt = get_datetime();
 	document.getElementById('globaltime').innerHTML = dt.t;
 	document.getElementById('globaldate').innerHTML = dt.d;
 	for (let index = 0; index < endpoints.views.length; index++) {
+		// Get the view details and initiate the relevant segment function.
 		var obj = endpoints.views[index];
 		if ( window['update_' + obj.type] !== undefined ) {
 			window['update_' + obj.type](obj, index);
@@ -264,6 +269,32 @@ function get_datetime(military = false) {
 		't': (military) ? dt.format('H:mm') : dt.format('h:mm a'),
 		'd': dt.format('DD/MM/YYYY')
 	};
+}
+
+/**
+ * Checks whether the stage is in circulation.
+ *
+ * @param {int} stage_id The stage identifier (int, without the 'e'). 
+ */
+function is_stage_enabled(stage_id) {
+	stage = document.getElementById('e' + stage_id).parentNode.id;
+
+	if (stage === "stage") {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+/**
+ * Restages all the faulted stages.
+ */
+function restage_faulted() {
+	stage      = document.getElementById("stage");
+	faultstage = document.getElementById("stageLeft").children;
+	for (let index = 0; index < faultstage.length; index++) {
+		document.getElementById("stage").appendChild(faultstage[index]);
+	}
 }
 
 /**

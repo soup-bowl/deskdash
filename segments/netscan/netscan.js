@@ -12,6 +12,11 @@
  * @param {int}    index The numerical indicator of the stage part.
  */
 function update_netscan(obj, index) {
+	// If this is the start, create the slots.
+	if (data[index] === undefined) {
+		data[index] = {'content': undefined, 'errors': 0};
+	}
+
 	auth  = (obj.key !== undefined) ? "?key=" + obj.key : "";
 	fetch(obj.endpoint + auth + "&networkscan=yes")
 		.then(response => response.json())
@@ -21,18 +26,19 @@ function update_netscan(obj, index) {
 			}
 
 			document.getElementById(index + 'connectStat').classList.add('d-none');
+			data[index].errors = 0;
 
-			if (data[index] === undefined) {
-				data[index] = json.content;
+			if (data[index].content === undefined) {
+				data[index].content = json.content;
 			}
 
 			for (i = 1; i < 255; i++) {
-				if (json.content[i] === undefined && data[index][i] === undefined) {
+				if (json.content[i] === undefined && data[index].content[i] === undefined) {
 					continue;
-				} else if (json.content[i] === undefined && typeof data[index][i] === "object") {
-					data[index][i].status = "down";
-				} else if (json.content[i].status === "up" && (data[index][i] === undefined || (typeof data[index][i] === "object" && data[index][i].status === "down"))) {
-					data[index][i] = json.content[i];
+				} else if (json.content[i] === undefined && typeof data[index].content[i] === "object") {
+					data[index].content[i].status = "down";
+				} else if (json.content[i].status === "up" && (data[index].content[i] === undefined || (typeof data[index].content[i] === "object" && data[index].content[i].status === "down"))) {
+					data[index].content[i] = json.content[i];
 				} else {
 					continue;
 				}
@@ -40,8 +46,8 @@ function update_netscan(obj, index) {
 
 			holder = document.getElementById(index+"netlist");
 			holder.innerHTML = "";
-			for (x in data[index]) {
-				content = data[index][x];
+			for (x in data[index].content) {
+				content = data[index].content[x];
 				button_col = (content.status === "up") ? 'badge-success' : 'badge-danger';
 				button_lbl = (content.status === "up") ? 'up' : 'down';
 				hostname = (content.hostname === content.ip) ? '<span class="text-muted">N/A</span>' : content.hostname;
@@ -50,6 +56,12 @@ function update_netscan(obj, index) {
 		})
 		.catch(err => {
 			document.getElementById(index + 'connectStat').classList.remove('d-none');
+			data[index].errors++;
+
+			if (data[index].errors > 5) {
+				console.log('5 counts of URL errors on stage ' + index + '. Dropping stage.');
+				toggle_stage(index);
+			}
 		});
 		
 }
