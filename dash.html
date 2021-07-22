@@ -22,10 +22,10 @@
 		<button type="button" class="open-dash btn btn-secondary" onclick="toggle_dashboard()"><i class="fas fa-bars"></i></button>
 
 		<div id="dashboard" class="d-none">
-			<header class="d-flex justify-content-center py-3">
+			<header class="d-flex justify-content-center py-1">
 				<p class="h2"><span id="globaltime"></span> - <span id="globaldate"></span></p>
 			</header>
-			<div class="px-4 my-5 text-center">
+			<div class="text-center">
 				<div class="container">
 					<h1>Dashboard Controls</h1>
 					<div class="row">
@@ -46,8 +46,8 @@
 						<div class="col">
 							<div class="col">
 								<div class="btn-group btn-group-toggle">
-									<button type="button" class="btn btn-lg btn-secondary" onclick="carouselCommand.cycle()"><i class="fas fa-play"></i></button>
-									<button type="button" class="btn btn-lg btn-secondary" onclick="carouselCommand.pause()"><i class="fas fa-pause"></i></button>
+									<button id="btnPlay"  type="button" class="btn btn-lg btn-secondary" onclick="carouselCommand.cycle();toggle_dashboard()"><i class="fas fa-play"></i></button>
+									<button id="btnPause" type="button" class="btn btn-lg btn-secondary" onclick="carouselCommand.pause();toggle_dashboard()"><i class="fas fa-pause"></i></button>
 								</div>
 								<p>Play/Pause Slide</p>
 							</div>

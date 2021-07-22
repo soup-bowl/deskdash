@@ -240,6 +240,15 @@ function toggle_dashboard() {
 		dashboard.classList.add("d-none");
 	} else {
 		dashboard.classList.remove("d-none");
+
+		// Update the play/pause button status.
+		if( document.getElementById("ysmrrbrrlarbrrrr").classList.contains("paused") ) {
+			document.getElementById("btnPause").classList.add("disabled");
+			document.getElementById("btnPlay").classList.remove("disabled");
+		} else {
+			document.getElementById("btnPlay").classList.add("disabled");
+			document.getElementById("btnPause").classList.remove("disabled");
+		}
 	}
 }
 
