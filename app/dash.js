@@ -120,7 +120,7 @@ function update() {
 function set_stage_buttons(id, buttons = []) {
 	obj       = endpoints.views[id];
 	stageBtns = document.getElementById("stageButtons");
-	btnHtml   = '';
+	btnHtml   = "<div class=\"row\">";
 
 	btlen = buttons.length;
 	for (let index = 0; index < btlen; index++) {
@@ -129,6 +129,8 @@ function set_stage_buttons(id, buttons = []) {
 		btnHtml += "<p>" + buttons[index]["name"] + "</p>";
 		btnHtml += "</div>";
 	}
+
+	btnHtml += "</div>"
 
 	stageBtns.innerHTML = btnHtml;
 }
