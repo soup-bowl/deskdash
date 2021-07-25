@@ -1,7 +1,7 @@
 {
   "name": "deskdash",
   "description": "Displays information about enrolled network devices",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "main": "main.js",
   "devDependencies": {
     "electron": "^12.0.7",

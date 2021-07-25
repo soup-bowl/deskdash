@@ -117,14 +117,16 @@ function update() {
  * @param {int}  id          Stage ID that's currently on-screen.
  * @param {bool} canShutdown Can the stage shut down the host?
  */
-function set_stage_buttons(id, canShutdown = false) {
+function set_stage_buttons(id, buttons = []) {
+	obj       = endpoints.views[id];
 	stageBtns = document.getElementById("stageButtons");
 	btnHtml   = '';
 
-	if (canShutdown) {
+	btlen = buttons.length;
+	for (let index = 0; index < btlen; index++) {
 		btnHtml += "<div class=\"col\">";
-		btnHtml += "<button type=\"button\" class=\"btn btn-lg btn-secondary\" onclick=\"execute_shutdown(" + id + ")\"><i class=\"fas fa-power-off\"></i></button>";
-		btnHtml += "<p>Shutdown PC</p>";
+		btnHtml += "<button type=\"button\" class=\"btn btn-lg btn-secondary\" onclick=\"execute_cmd(" + id + ", " + buttons[index]["name"] + ")\"><i class=\"fas " + buttons[index]["icon"] + "\"></i></button>";
+		btnHtml += "<p>" + buttons[index]["name"] + "</p>";
 		btnHtml += "</div>";
 	}
 
@@ -349,13 +351,18 @@ window.onload = function() {
 
 			document.getElementById('ysmrrbrrlarbrrrr').addEventListener('slide.bs.carousel', event => {
 				activeStage = event.relatedTarget.id.slice(-1);
-				canShutdown = (typeof endpoints.views[activeStage].permitShutdown !== 'undefined') ? endpoints.views[activeStage].permitShutdown : false;
-				set_stage_buttons(activeStage, canShutdown);
+
+				// If the now-active stage has buttons, send a request to the function to set them. Otherwise, set to blank.
+				var obj = endpoints.views[activeStage];
+				set_stage_buttons(activeStage);
+				if ( window['buttons_' + obj.type] !== undefined ) {
+					window['buttons_' + obj.type](obj, activeStage);
+				}
 			});
 		})
 		.catch(err => console.log(err));
 	
-	window.onkeydown= function(keypress){
+	window.onkeydown = function(keypress){
 		// 67 = (C)ursor.
 		if(keypress.keyCode === 67){
 			toggle_cursor();

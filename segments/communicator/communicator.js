@@ -110,3 +110,28 @@ function update_communicator(obj, index) {
 			}
 		});
 }
+
+/**
+ * Sets the slide-specific action buttons.
+ *
+ * @param {object} obj   The subset of the main configuration file relating to this entity.
+ * @param {int}    index The numerical indicator of the stage part.
+ */
+function buttons_communicator(obj, id) {
+	auth = (obj.key !== undefined) ? "?key=" + obj.key : "";
+	console.log(obj.endpoint + auth + "&cmd=ls");
+	fetch(obj.endpoint + auth + "&cmd=ls")
+		.then(response => response.json())
+		.then(json => {
+			let btns = [];
+
+			for (const [key, value] of Object.entries(json.content)) {
+				btns.push({
+					name: key,
+					icon: value["fa-icon"]
+				});
+			}
+
+			set_stage_buttons(id, btns);
+	});
+}
