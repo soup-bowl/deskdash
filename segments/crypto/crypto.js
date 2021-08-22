@@ -11,7 +11,7 @@
  * @param {object} obj   The subset of the main configuration file relating to this entity.
  * @param {int}    index The numerical indicator of the stage part.
  */
-function update_crypto(obj, index) {
+async function update_crypto(obj, index) {
 	// If this is the start, create the slots in the data storage for our graph.
 	if (data[index] === undefined) {
 		data[index] = {'series': [], 'trackids': []};
@@ -35,59 +35,63 @@ function update_crypto(obj, index) {
 
 	// Grab historical pricing data for each of our coins.
 	if(!is_visible(index)) { return; }
+
 	track_currency = (obj.currency === undefined) ? 'usd' : obj.currency;
-	track_days     = (obj.days === undefined) ? 1 : obj.days;
-	track_interval = (obj.interval === undefined) ? 'hourly' : obj.interval;
 	for (let i = 0; i < obj.track.length; i++) {
-		fetch('https://api.coingecko.com/api/v3/coins/' + obj.track[i] + '/market_chart?vs_currency=' + track_currency + '&days=' + track_days + '&interval=' + track_interval)
-			.then(response => response.json())
-			.then(json => {
-				var obj = endpoints.views[index];
+		var uri1 = 'https://api.coingecko.com/api/v3/coins/' + obj.track[i] + '/market_chart?days=1&interval=hourly&vs_currency=' + track_currency;
+		var uri2 = 'https://api.coingecko.com/api/v3/coins/' + obj.track[i] + '/market_chart?days=2&interval=monthly&vs_currency=' + track_currency;
+		let [res1, res2] = await Promise.all([
+            fetch(uri1).then(response => response.json()),
+            fetch(uri2).then(response => response.json()),
+        ]);
 
-				data[index].series[i] = [];
-				json['prices'].forEach(interval => {
-					data[index].series[i].push(interval[1]);
-				});
+		var obj = endpoints.views[index];
 
-				idname  = 'crypto' + index + 'point' + i;
-				coinbox = document.getElementById(idname);
-				if (!coinbox) {
-					area = document.getElementById(index + 'charts');
+		data[index].series[i] = [ [], [] ];
+		let count = 0;
+		res1['prices'].forEach(interval => {
+			data[index].series[i][1].push(interval[1]);
+			count++;
+		});
+		for (let j = 0; j < count; j++) {
+			data[index].series[i][0].push(res2['prices'][j][1]);
+		}
 
-					title = document.createElement('h2');
-					title.innerHTML = obj.titles[i];
+		idname  = 'crypto' + index + 'point' + i;
+		coinbox = document.getElementById(idname);
+		if (!coinbox) {
+			area = document.getElementById(index + 'charts');
 
-					box           = document.createElement('div');
-					box.id        = idname;
-					box.className = idname + ' cryto-graph ' + obj.track[i];
+			title = document.createElement('h2');
+			title.innerHTML = obj.titles[i];
 
-					area.appendChild(title);
-					area.appendChild(box);
+			box           = document.createElement('div');
+			box.id        = idname;
+			box.className = idname + ' cryto-graph ' + obj.track[i];
+
+			area.appendChild(title);
+			area.appendChild(box);
+		}
+
+		// No chart? Create one. If the chart exists, replace the data with the latest collection.
+		graph_height = (obj.graphHeights === undefined) ? '200' : obj.graphHeights;
+		chart = document.getElementsByClassName(idname);
+		if(chart[0].__chartist__ === undefined) {
+			new Chartist.Line('.' + idname, {
+				labels: [],
+				series: data[index].series[i],
+			}, {
+				fullWidth: true,
+				chartPadding: { right: 40 },
+				height: graph_height,
+				axisX: {
+					showGrid: false
 				}
-
-				// No chart? Create one. If the chart exists, replace the data with the latest collection.
-				graph_height = (obj.graphHeights === undefined) ? '200' : obj.graphHeights;
-				chart = document.getElementsByClassName(idname);
-				if(chart[0].__chartist__ === undefined) {
-					new Chartist.Line('.' + idname, {
-						labels: [],
-						series: [data[index].series[i]],
-					}, {
-						fullWidth: true,
-						chartPadding: { right: 40 },
-						height: graph_height,
-						axisX: {
-							showGrid: false
-						}
-					});
-				} else {
-					chart[0].__chartist__.update({'series': [data[index].series[i]]});
-				}
-
-				document.getElementById(index + 'connectStat').classList.add('d-none');
-			})
-			.catch(err => {
-				document.getElementById(index + 'connectStat').classList.remove('d-none');
 			});
+		} else {
+			chart[0].__chartist__.update({'series': data[index].series[i]});
+		}
+
+		document.getElementById(index + 'connectStat').classList.add('d-none');
 	}
 }

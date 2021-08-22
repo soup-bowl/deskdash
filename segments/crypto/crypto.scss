@@ -11,24 +11,45 @@
 		}
 	}
 
+	.bitcoin .ct-series-b .ct-bar,
+	.bitcoin .ct-series-b .ct-line,
+	.bitcoin .ct-series-b .ct-point,
+	.bitcoin .ct-series-b .ct-slice-donut {
+		stroke: #f7931a;
+	}
+
 	.bitcoin .ct-series-a .ct-bar,
 	.bitcoin .ct-series-a .ct-line,
 	.bitcoin .ct-series-a .ct-point,
 	.bitcoin .ct-series-a .ct-slice-donut {
-		stroke: #f7931a;
+		stroke: #814d0c;
+	}
+
+	.ethereum .ct-series-b .ct-bar,
+	.ethereum .ct-series-b .ct-line,
+	.ethereum .ct-series-b .ct-point,
+	.ethereum .ct-series-b .ct-slice-donut {
+		stroke: #627eea;
 	}
 
 	.ethereum .ct-series-a .ct-bar,
 	.ethereum .ct-series-a .ct-line,
 	.ethereum .ct-series-a .ct-point,
 	.ethereum .ct-series-a .ct-slice-donut {
-		stroke: #627eea;
+		stroke: #192969;
+	}
+
+	.basic-attention-token .ct-series-b .ct-bar,
+	.basic-attention-token .ct-series-b .ct-line,
+	.basic-attention-token .ct-series-b .ct-point,
+	.basic-attention-token .ct-series-b .ct-slice-donut {
+		stroke: #ff5000;
 	}
 
 	.basic-attention-token .ct-series-a .ct-bar,
 	.basic-attention-token .ct-series-a .ct-line,
 	.basic-attention-token .ct-series-a .ct-point,
 	.basic-attention-token .ct-series-a .ct-slice-donut {
-		stroke: #ff5000;
+		stroke: #7e2800;
 	}
 }
