@@ -125,7 +125,7 @@ function set_stage_buttons(id, buttons = []) {
 	btlen = buttons.length;
 	for (let index = 0; index < btlen; index++) {
 		btnHtml += "<div class=\"col\">";
-		btnHtml += "<button type=\"button\" class=\"btn btn-lg btn-secondary\" onclick=\"execute_cmd(" + id + ", '" + buttons[index]["name"] + "')\"><i class=\"fas " + buttons[index]["icon"] + "\"></i></button>";
+		btnHtml += "<button type=\"button\" class=\"btn btn-lg btn-secondary\" onclick=\"execute_cmd(" + id + ", '" + buttons[index]["name"] + "')\"><i class=\"bi " + buttons[index]["icon"] + "\"></i></button>";
 		btnHtml += "<p>" + buttons[index]["name"] + "</p>";
 		btnHtml += "</div>";
 	}

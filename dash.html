@@ -5,7 +5,7 @@
 		<title>Dashboard</title>
 		<link href="node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
 		<link href="node_modules/chartist/dist/chartist.css" rel="stylesheet">
-		<link href="node_modules/@fortawesome/fontawesome-free/css/all.css" rel="stylesheet">
+		<link href="node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 		<link href="app/dash.css" rel="stylesheet">
 	</head>
 	<body>
@@ -19,7 +19,7 @@
 			<h1>Loading...</h1>
 		</div>
 
-		<button type="button" class="open-dash btn btn-secondary" onclick="toggle_dashboard()"><i class="fas fa-bars"></i></button>
+		<button type="button" class="open-dash btn btn-secondary" onclick="toggle_dashboard()"><i class="bi bi-three-dots"></i></button>
 
 		<div id="dashboard" class="d-none">
 			<header class="d-flex justify-content-center py-1">
@@ -30,15 +30,15 @@
 					<h1>Dashboard Controls</h1>
 					<div class="row">
 						<div class="col">
-							<button type="button" class="btn btn-lg btn-danger" onclick="window.close()"><i class="fas fa-power-off"></i></button>
+							<button type="button" class="btn btn-lg btn-danger" onclick="window.close()"><i class="bi-power"></i></button>
 							<p>Exit Application</p>
 						</div>
 						<div class="col">
-							<button type="button" class="btn btn-lg btn-secondary" onclick="window.location.reload(false)"><i class="fas fa-redo"></i></button>
+							<button type="button" class="btn btn-lg btn-secondary" onclick="window.location.reload(false)"><i class="bi bi-arrow-clockwise"></i></button>
 							<p>Reload All</p>
 						</div>
 						<div class="col">
-							<button type="button" class="btn btn-lg btn-secondary" onclick="restart_carousel();toggle_dashboard()"><i class="far fa-life-ring"></i></button>
+							<button type="button" class="btn btn-lg btn-secondary" onclick="restart_carousel();toggle_dashboard()"><i class="bi bi-life-preserver"></i></button>
 							<p>Restart Slider</p>
 						</div>
 					</div>
@@ -46,24 +46,24 @@
 						<div class="col">
 							<div class="col">
 								<div class="btn-group btn-group-toggle">
-									<button id="btnPlay"  type="button" class="btn btn-lg btn-secondary" onclick="carouselCommand.cycle();toggle_dashboard()"><i class="fas fa-play"></i></button>
-									<button id="btnPause" type="button" class="btn btn-lg btn-secondary" onclick="carouselCommand.pause();toggle_dashboard()"><i class="fas fa-pause"></i></button>
+									<button id="btnPlay"  type="button" class="btn btn-lg btn-secondary" onclick="carouselCommand.cycle();toggle_dashboard()"><i class="bi bi-play"></i></button>
+									<button id="btnPause" type="button" class="btn btn-lg btn-secondary" onclick="carouselCommand.pause();toggle_dashboard()"><i class="bi bi-pause"></i></button>
 								</div>
 								<p>Play/Pause Slide</p>
 							</div>
 						</div>
 						<div class="col">
-							<button type="button" class="btn btn-lg btn-secondary" onclick="carouselCommand.next()"><i class="fas fa-forward"></i></button>
+							<button type="button" class="btn btn-lg btn-secondary" onclick="carouselCommand.next()"><i class="bi bi-skip-forward"></i></button>
 							<p>Skip Slide</p>
 						</div>
 						<div class="col">
-							<button type="button" class="btn btn-lg btn-secondary" onclick="toggle_cursor();toggle_dashboard()"><i class="fas fa-mouse-pointer"></i></button>
+							<button type="button" class="btn btn-lg btn-secondary" onclick="toggle_cursor();toggle_dashboard()"><i class="bi bi-cursor"></i></button>
 							<p>Toggle <u>C</u>ursor</p>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col">
-							<button type="button" class="btn btn-lg btn-warning" onclick="restage_faulted()"><i class="fas fa-exclamation-triangle"></i></button>
+							<button type="button" class="btn btn-lg btn-warning" onclick="restage_faulted()"><i class="bi bi-exclamation-triangle"></i></button>
 							<p><span id="alertCount">0</span> Alert(s)</p>
 						</div>
 					</div>
@@ -71,7 +71,7 @@
 					<span id="stageButtons"></span>
 				</div>
 			</div>
-			<button type="button" class="btn btn-secondary close-dash" onclick="toggle_dashboard()"><i class="fas fa-times"></i></button>
+			<button type="button" class="btn btn-secondary close-dash" onclick="toggle_dashboard()"><i class="bi bi-three-dots"></i></button>
 		</div>
 
 		<script src="node_modules/bootstrap.native/dist/bootstrap-native.js"></script>

@@ -128,7 +128,7 @@ function buttons_communicator(obj, id) {
 			for (const [key, value] of Object.entries(json.content)) {
 				btns.push({
 					name: key,
-					icon: value["fa-icon"]
+					icon: value["bi-icon"]
 				});
 			}
 
