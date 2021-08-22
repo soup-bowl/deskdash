@@ -40,10 +40,16 @@ async function update_crypto(obj, index) {
 	for (let i = 0; i < obj.track.length; i++) {
 		var uri1 = 'https://api.coingecko.com/api/v3/coins/' + obj.track[i] + '/market_chart?days=1&interval=hourly&vs_currency=' + track_currency;
 		var uri2 = 'https://api.coingecko.com/api/v3/coins/' + obj.track[i] + '/market_chart?days=2&interval=monthly&vs_currency=' + track_currency;
-		let [res1, res2] = await Promise.all([
-            fetch(uri1).then(response => response.json()),
-            fetch(uri2).then(response => response.json()),
-        ]);
+		let res1; let res2;
+		try {
+			[res1, res2] = await Promise.all([
+				fetch(uri1).then(response => response.json()),
+				fetch(uri2).then(response => response.json()),
+			]);
+		} catch(err) {
+			document.getElementById(index + 'connectStat').classList.remove('d-none');
+			continue;
+		} 
 
 		var obj = endpoints.views[index];
 
