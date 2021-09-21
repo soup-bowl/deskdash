@@ -15,10 +15,13 @@ const fs = require('fs');
 function createWindow () {
 	const win = new BrowserWindow({
 		fullscreen: true,
-		autoHideMenuBar: true
+		autoHideMenuBar: true,
+		webPreferences: {
+			preload: path.join(__dirname, 'preload.js')
+		}
 	});
 
-	win.loadFile('dash.html');
+	win.loadFile( path.join(__dirname, 'app', 'dash.html') );
 }
 
 // Start the Electron app, and create a window.

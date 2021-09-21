@@ -329,7 +329,7 @@ function toggle_stage(stage_id) {
 // --- Init ---
 
 window.onload = function() {
-	fetch('config.json')
+	fetch('../config.json')
 		.then(response => response.json())
 		.then(json => {
 			endpoints = json;
