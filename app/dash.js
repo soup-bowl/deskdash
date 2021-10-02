@@ -253,14 +253,18 @@ function toggle_dashboard() {
 
 /**
  * Toggles cursor visiblity by adding a CSS rule to the body tag.
+ *
+ * @param {bool} set_state Stores the setting for on-boot usage.
  */
-function toggle_cursor() {
+function toggle_cursor( set_state = true ) {
 	bigchungus = document.getElementsByTagName('body')[0];
 
 	if ( ! bigchungus.classList.contains("no-cursor") ) {
 		bigchungus.classList.add("no-cursor");
+		if ( set_state ) { localStorage.setItem( 'ddd_cursorstate', 'yes' ); }
 	} else {
 		bigchungus.classList.remove("no-cursor");
+		if ( set_state ) { localStorage.setItem( 'ddd_cursorstate', 'no' ); }
 	}
 }
 
@@ -338,6 +342,11 @@ window.onload = function() {
 			var updateLoop = window.setInterval(function(){
 				update();
 			}, 5000);
+
+			cursor_is_off = localStorage.getItem( 'ddd_cursorstate' );
+			if ( cursor_is_off !== null && cursor_is_off === 'yes' ) {
+				toggle_cursor( false );
+			}
 
 			carouselCommand = new BSN.Carousel('#ysmrrbrrlarbrrrr', {
 				// these options values will override the ones set via DATA API
